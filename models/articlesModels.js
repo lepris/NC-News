@@ -1,9 +1,9 @@
 const connection = require('../db/connection');
 
 exports.getAllArticles = (args) => {
-  console.log('\n\n >>>>>>> Hi from ARTICLES Model');
+  console.log('\n\n////////MODEL ARTICLES');
 
-  console.log('QUERY ----> ', args);
+  console.log('\n////////MODEL ARTICLES QUERY ', args);
 
   return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
     .count('comments.comment_id as comment_count')

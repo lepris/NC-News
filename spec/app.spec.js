@@ -11,11 +11,11 @@ const request = supertest(app);
 describe('', () => {
   beforeEach(() => connection.seed.run());
   after(() => {
-    console.log('end of connection');
+    console.log('/**TEST SUITE**/end of connection');
     return connection.destroy();
   });
 
-  describe.only('ERROR TESTING', () => {
+  describe('/ROOT ERROR TESTING', () => {
     it('/TOPICS bad route', () => request.delete('/api/topics')
       .expect(404)
       .then(({ body }) => {
@@ -30,7 +30,7 @@ describe('', () => {
   });
 
   describe('/api', () => {
-    describe('/articles', () => {
+    describe.only('/articles', () => {
       it('/GET /ARTICLES status 200 and return articles', () => request.get('/api/articles')
         .expect(200)
         .then((res) => {
