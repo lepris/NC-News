@@ -5,7 +5,7 @@ function getAllTopics() {
 }
 
 function postTopic(data) {
-  console.log('\nDATAT DATAYAIAOAPOA', data);
+  console.log('\nMODEL DATA', data);
   return connection.insert(data).into('topics').returning('*');
 }
 

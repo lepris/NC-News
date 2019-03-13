@@ -7,14 +7,15 @@ exports.sendTopics = (req, res, next) => {
 };
 
 exports.addTopic = (req, res, next) => {
+  console.log('\n\n\n %%%%%%%%% Visit in the controller');
   const newTopic = req.body;
   postTopic(newTopic)
     .then((addedTopic) => {
       console.log(addedTopic);
-      res.status(201).send(addedTopic);
+      const [result] = addedTopic;
+      res.status(201).send({ topic: result });
     })
     .catch((err) => {
-      console.error(err.code);
       next(err);
     });
 };

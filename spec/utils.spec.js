@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { dateConversion, articleRef, commentRefined } = require('../db/utils/dateConversion.js');
 
-console.log(dateConversion, articleRef);
+// console.log(dateConversion, articleRef);
 
 describe('Check utlitiry function for date conversion', () => {
   it('it takes the correct value', () => {
@@ -37,7 +37,7 @@ describe('commentRefined - utility', () => {
   it('Converts comment data using article_id instead of belongs to', () => {
     const data = [{
       body:
-                "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       belongs_to: 'Running a Node App',
       created_by: 'butter_bridge',
       votes: 16,
@@ -50,7 +50,7 @@ describe('commentRefined - utility', () => {
 
     expect(commentRefined(keyObj, data)).to.be.eql([{
       body:
-                "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       article_id: 1,
       author: 'butter_bridge',
       votes: 16,
