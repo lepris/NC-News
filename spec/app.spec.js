@@ -143,11 +143,21 @@ describe('', () => {
             // expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
           }));
       });
-      describe.only('GET api/articles/:article_id', () => {
+      describe('GET api/articles/:article_id', () => {
         it('/GET /ARTICLES/:article_id responds with 200 and the correct article', () => request.get('/api/articles/1')
           .expect(200)
           .then((res) => {
             expect(res.body.article).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
+          }));
+        it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Invalid input type, please provide a string');
+          }));
+        it('/GET /ARTICLES/999999 responds with 404 ', () => request.get('/api/articles/999999')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.message).to.eql("Couldn't find this id");
           }));
       });
     });

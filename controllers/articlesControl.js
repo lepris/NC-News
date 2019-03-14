@@ -1,4 +1,4 @@
-const { getAllArticles, getArticleById, postArticle } = require('../models/articlesModels');
+const { getAllArticles, getArticleById, getCurrentArticleCount, postArticle } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesChechInput');
 
 exports.sendAllArticles = (req, res, next) => {
@@ -18,14 +18,25 @@ exports.sendAllArticles = (req, res, next) => {
 };
 
 exports.sendArticleById = (req, res, next) => {
-  console.log('/////VIsit in function for id param');
   const endParams = req.params;
-  console.log(endParams);
+
+  console.log('/////VIsit in function for id param', endParams);
+
+  // getCurrentArticleCount()
+  //   .then(currentCount => {
+  //     console.log(currentCount)
+  //     // endParams <= currentCount ? endParams : next({ code: 404, message: 'Knex returned no results' })
+  //   })
   getArticleById(endParams)
+
     .then((returnedArticle) => {
-      console.log('\n\n', returnedArticle);
+      if (returnedArticle[0]) returnedArticle;
+      else {
+        console.log('rejecting...');
+        return Promise.reject({ code: 404, message: "Couldn't find this id" });
+      }
       const newArticle = returnedArticle[0];
-      newArticle.author = returnedArticle[0].username;
+      newArticle.author = newArticle.username;
       delete newArticle.username;
 
       return newArticle;
@@ -33,6 +44,9 @@ exports.sendArticleById = (req, res, next) => {
     .then((article) => {
       console.log('//////>RESULT OF CONTROLLER\n\n\n', article);
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 
