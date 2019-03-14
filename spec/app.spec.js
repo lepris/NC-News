@@ -152,12 +152,12 @@ describe('', () => {
         it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
           .expect(400)
           .then(({ body }) => {
-            expect(body.message).to.eql('Invalid input type, please provide a string');
+            expect(body.message).to.eql('Invalid input type, please provide a number');
           }));
         it('/GET /ARTICLES/999999 responds with 404 ', () => request.get('/api/articles/999999')
           .expect(404)
           .then(({ body }) => {
-            expect(body.message).to.eql("Couldn't find this id");
+            expect(body.message).to.eql('This id is not currently in our database');
           }));
       });
     });

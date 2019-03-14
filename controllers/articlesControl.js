@@ -1,4 +1,6 @@
-const { getAllArticles, getArticleById, getCurrentArticleCount, postArticle } = require('../models/articlesModels');
+const {
+  getAllArticles, getArticleById, getCurrentArticleCount, postArticle,
+} = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesChechInput');
 
 exports.sendAllArticles = (req, res, next) => {
@@ -20,21 +22,19 @@ exports.sendAllArticles = (req, res, next) => {
 exports.sendArticleById = (req, res, next) => {
   const endParams = req.params;
 
-  console.log('/////VIsit in function for id param', endParams);
-
-  // getCurrentArticleCount()
-  //   .then(currentCount => {
-  //     console.log(currentCount)
-  //     // endParams <= currentCount ? endParams : next({ code: 404, message: 'Knex returned no results' })
-  //   })
+  if (/[^0-9]/.test(endParams.article_id)) {
+    return next({ code: 400, message: 'Invalid input type, please provide a number' });
+  }
+  getCurrentArticleCount()
+    .then((currentCount) => {
+      if (endParams.article_id > currentCount[0].count) {
+        console.log('rejecting...');
+        return next({ code: 404, message: 'This id is not currently in our database' });
+      }
+    });
   getArticleById(endParams)
 
     .then((returnedArticle) => {
-      if (returnedArticle[0]) returnedArticle;
-      else {
-        console.log('rejecting...');
-        return Promise.reject({ code: 404, message: "Couldn't find this id" });
-      }
       const newArticle = returnedArticle[0];
       newArticle.author = newArticle.username;
       delete newArticle.username;

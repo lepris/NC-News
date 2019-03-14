@@ -36,12 +36,11 @@ exports.getArticleById = data => connection.select('users.username', 'articles.t
   .where('articles.article_id', '=', data.article_id);
 
 
-
 exports.postArticle = (data) => {
   console.log('\n///////MODEL OUTPUT', data);
   return connection.insert(data).into('articles').returning('*');
 };
 exports.getCurrentArticleCount = () => {
-
-  return connection.count(article.id).from('articles');
-}
+  console.log('\n\n\n CURRENT COUNT');
+  return connection.count('article_id').from('articles');
+};
