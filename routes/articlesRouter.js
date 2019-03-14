@@ -1,10 +1,12 @@
 const articlesRouter = require('express').Router();
-const { sendAllArticles } = require('../controllers/articlesControl');
+const { sendAllArticles, addArticle } = require('../controllers/articlesControl');
 
-articlesRouter.get('/', sendAllArticles)
-
-  .all((req, res) => {
-    res.status(405).send({ msg: 'Method not allowed' });
+articlesRouter
+  .route('/')
+  .get(sendAllArticles)
+  .post(addArticle)
+  .all((req, res, next) => {
+    res.status(404).send({ message: 'Route not found' });
   });
 
 

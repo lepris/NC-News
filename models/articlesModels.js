@@ -5,6 +5,11 @@ exports.getAllArticles = (args) => {
 
   console.log('\n////////MODEL ARTICLES QUERY ', args);
 
+  if (args.order && args.order !== 'asc' && args.order !== 'desc') {
+    console.log('rejecting...');
+    return Promise.reject({ code: 404, message: 'Please input asc or desc' });
+  }
+
   return connection.select('articles.author', 'articles.title', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
     .count('comments.comment_id as comment_count')
     .from('articles')
@@ -14,16 +19,10 @@ exports.getAllArticles = (args) => {
       if (args) {
         if (args.author) {
           this.where('articles.author', args.author);
+        } else if (args.topic) {
+          this.where('articles.topic', args.topic);
         }
-        // else if (whereConditions.selector) {
-        //   this.where(whereConditions.selector, newSelectorValues[0])
-        // }
       }
     })
-    .orderBy('comment_count', 'desc')
-    .then(articleArray => articleArray)
-    .catch((err) => {
-      console.log(err);
-      next(err);
-    });
+    .orderBy(args.sort_by || 'articles.created_at', args.order || 'desc');
 };

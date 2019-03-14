@@ -7,7 +7,7 @@ topicsRouter
   .get(sendTopics)
   .post(addTopic)
   .all((req, res, next) => {
-    res.status(404).send({ msg: 'Route not found' });
+    res.status(404).send({ message: 'Route not found' });
   });
 
 

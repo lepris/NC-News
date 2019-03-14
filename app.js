@@ -11,11 +11,12 @@ app.use(bodyParser.json());
 app.use('/api', apiRouter);
 
 app.all('/*', (req, res, next) => {
-  res.status(404).send({ msg: 'Route not found' });
+  res.status(404).send({ message: 'Route not found' });
 });
 
 // other ERROR handling middleware
 app.use(handle400);
+app.use(handle404);
 
 
 module.exports = app;
