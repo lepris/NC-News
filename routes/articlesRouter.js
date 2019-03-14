@@ -1,6 +1,7 @@
 const articlesRouter = require('express').Router();
-const { sendAllArticles, addArticle } = require('../controllers/articlesControl');
+const { sendAllArticles, addArticle, sendArticleById } = require('../controllers/articlesControl');
 
+articlesRouter.get('/:article_id', sendArticleById);
 articlesRouter
   .route('/')
   .get(sendAllArticles)

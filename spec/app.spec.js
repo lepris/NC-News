@@ -86,7 +86,7 @@ describe('', () => {
             expect(res.body.message).to.eql('Please input asc or desc');
           }));
       });
-      describe.only('/api/articles POST REQUEST', () => {
+      describe('/api/articles POST REQUEST', () => {
         it('POST /ArTICLES should reply with status 201 and the posted topic', () => request.post('/api/articles')
           .send({
             title: 'Cats following Exploding Kittens Stars',
@@ -141,6 +141,13 @@ describe('', () => {
           .expect(400)
           .then(({ body }) => {
             // expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
+          }));
+      });
+      describe.only('GET api/articles/:article_id', () => {
+        it('/GET /ARTICLES/:article_id responds with 200 and the correct article', () => request.get('/api/articles/1')
+          .expect(200)
+          .then((res) => {
+            expect(res.body.article).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
           }));
       });
     });

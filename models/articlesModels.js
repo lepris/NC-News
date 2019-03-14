@@ -27,6 +27,14 @@ exports.getAllArticles = (args) => {
     .orderBy(args.sort_by || 'articles.created_at', args.order || 'desc');
 };
 
+exports.getArticleById = data => connection.select('users.username', 'articles.title', 'articles.body', 'articles.article_id', 'articles.topic', 'articles.created_at', 'articles.votes')
+  .count('comments.comment_id as comment_count')
+  .from('articles')
+  .leftJoin('comments', { 'comments.article_id': 'articles.article_id' })
+  .leftJoin('users', { 'users.username': 'articles.author' })
+  .groupBy('articles.article_id', 'users.username')
+  .where('articles.article_id', '=', data.article_id);
+
 
 exports.postArticle = (data) => {
   console.log('\n///////MODEL OUTPUT', data);

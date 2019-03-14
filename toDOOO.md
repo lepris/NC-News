@@ -1,19 +1,5 @@
 
-```http
-POST /api/articles
-```
 
-##### Request body accepts
-- an object containing the following properties:
-  * `title`
-  * `body`
-  * `topic`
-  * `username`
-
-##### Responds with
-- the posted article
-
-***
 
 ```http
 GET /api/articles/:article_id

@@ -1,14 +1,10 @@
-const { getAllArticles, postArticle } = require('../models/articlesModels');
+const { getAllArticles, getArticleById, postArticle } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesChechInput');
 
 exports.sendAllArticles = (req, res, next) => {
   const queryARgs = req.query;
-  console.log(queryARgs);
-
-
   getAllArticles(queryARgs).then((articles) => {
     console.log('\n\n/////////////////CONTROLLER ARTICLES RESULT\n\n', articles.slice(0, 2));
-
     if (articles[0]) res.status(200).send({ articles });
     else {
       console.log('rejecting...');
@@ -18,6 +14,25 @@ exports.sendAllArticles = (req, res, next) => {
     .catch((err) => {
       console.log('....moving to next');
       next(err);
+    });
+};
+
+exports.sendArticleById = (req, res, next) => {
+  console.log('/////VIsit in function for id param');
+  const endParams = req.params;
+  console.log(endParams);
+  getArticleById(endParams)
+    .then((returnedArticle) => {
+      console.log('\n\n', returnedArticle);
+      const newArticle = returnedArticle[0];
+      newArticle.author = returnedArticle[0].username;
+      delete newArticle.username;
+
+      return newArticle;
+    })
+    .then((article) => {
+      console.log('//////>RESULT OF CONTROLLER\n\n\n', article);
+      res.status(200).send({ article });
     });
 };
 
@@ -41,8 +56,6 @@ exports.addArticle = (req, res, next) => {
 
 
   postArticle(validatedInput)
-
-
     .then(([addedArticle]) => {
       console.log('/////////////CONTROLLER OUTPUT', addedArticle);
       res.status(201).send({ article: addedArticle });
