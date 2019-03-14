@@ -1,4 +1,5 @@
 const { getAllArticles, postArticle } = require('../models/articlesModels');
+const { checkInput } = require('../db/utils/articlesChechInput');
 
 exports.sendAllArticles = (req, res, next) => {
   const queryARgs = req.query;
@@ -21,5 +22,32 @@ exports.sendAllArticles = (req, res, next) => {
 };
 
 exports.addArticle = (req, res, next) => {
+  console.log('\n\n\n Article Visit in the controller');
 
+  const newArticle = req.body;
+  const validatedInput = checkInput(newArticle);
+
+
+  if (!validatedInput) {
+    return next({ code: 400, message: 'Please input data correctly: title body topic username' });
+  }
+  if (validatedInput.code === 'badlang') {
+    return next({ code: 400, message: validatedInput.message });
+  }
+
+  if (validatedInput.code === 'bodyTooShort') {
+    return next({ code: 400, message: validatedInput.message });
+  }
+
+
+  postArticle(validatedInput)
+
+
+    .then(([addedArticle]) => {
+      console.log('/////////////CONTROLLER OUTPUT', addedArticle);
+      res.status(201).send({ article: addedArticle });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

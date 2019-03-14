@@ -26,3 +26,9 @@ exports.getAllArticles = (args) => {
     })
     .orderBy(args.sort_by || 'articles.created_at', args.order || 'desc');
 };
+
+
+exports.postArticle = (data) => {
+  console.log('\n///////MODEL OUTPUT', data);
+  return connection.insert(data).into('articles').returning('*');
+};

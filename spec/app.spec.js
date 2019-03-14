@@ -86,10 +86,62 @@ describe('', () => {
             expect(res.body.message).to.eql('Please input asc or desc');
           }));
       });
-      describe('/api/articles POST REQUEST', () => {
-        it('REQUEST body accepts the following properties', () => {
+      describe.only('/api/articles POST REQUEST', () => {
+        it('POST /ArTICLES should reply with status 201 and the posted topic', () => request.post('/api/articles')
+          .send({
+            title: 'Cats following Exploding Kittens Stars',
+            body: 'Instead of drinking water from the cat bowl, make sure to steal water from the toilet wake up human for food at 4am chase the pig around the house vommit food and eat it again meowzer or curl into a furry donut cat snacks. Have my breakfast spaghetti yarn soft kitty warm kitty little ball of furr small kitty warm kitty little balls of fur you call this cat food. I could pee on this if i had the energy push your water glass on the floor rub face on owner for pose purrfectly to show my beauty. Flop over stand in doorway, unwilling to chose whether to stay in or go out jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water. Curl into a furry donut lick the other cats or run in circles, so groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked or stand in doorway, unwilling to chose whether to stay in or go out but thug cat . Sleep everywhere, but not in my bed. Cat walks in keyboard twitch tail in permanent irritation yet scream for no reason at 4 am. Sleep in the bathroom sink chase laser. ',
+            topic: 'cats',
+            username: 'lepris',
+          })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.article.title).to.eql('Cats following Exploding Kittens Stars');
+          }));
+        it('ERROR POST /ArTICLES should reply with status 400 and correct key values', () => request.post('/api/articles')
+          .send({
+            title: 'Cats following Exploding Kittens Stars',
+            body: 'Instead of drinking water from the cat bowl, make sure to steal water from the toilet wake up human for food at 4am chase the pig around the house vommit food and eat it again meowzer or curl into a furry donut cat snacks. Have my breakfast spaghetti yarn soft kitty warm kitty little ball of furr small kitty warm kitty little balls of fur you call this cat food. I could pee on this if i had the energy push your water glass on the floor rub face on owner for pose purrfectly to show my beauty. Flop over stand in doorway, unwilling to chose whether to stay in or go out jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water. Curl into a furry donut lick the other cats or run in circles, so groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked or stand in doorway, unwilling to chose whether to stay in or go out but thug cat . Sleep everywhere, but not in my bed. Cat walks in keyboard twitch tail in permanent irritation yet scream for no reason at 4 am. Sleep in the bathroom sink chase laser. ',
+            username: 'lepris',
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Please input data correctly: title body topic username');
+          }));
+        it('ERROR POST /ArTICLES should reply with status 400 and BAD lnaguage', () => request.post('/api/articles')
+          .send({
+            title: 'Cats following Exploding Kittens Stars',
+            body: 'Instead of drinking water from the cat bowl, make broccoli sure to steal water from the toilet wake up human for food at 4am chase the pig around the house vommit food and eat it again meowzer or curl into a furry donut cat snacks. Have my breakfast spaghetti yarn soft kitty warm kitty little ball of furr small kitty warm kitty little balls of fur you call this cat food. I could pee on this if i had the energy push your water glass on the floor rub face on owner for pose purrfectly to show my beauty. Flop over stand in doorway, unwilling to chose whether to stay in or go out jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water. Curl into a furry donut lick the other cats or run in circles, so groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked or stand in doorway, unwilling to chose whether to stay in or go out but thug cat . Sleep everywhere, but not in my bed. Cat walks in keyboard twitch tail in permanent irritation yet scream for no reason at 4 am. Sleep in the bathroom sink chase laser. ',
+            topic: 'cats',
+            username: 'lepris',
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Please no swearing, this is not allowed :   broccoli ');
+          }));
+        it('ERROR POST /ARTICLES when author is not registered user', () => request.post('/api/articles')
+          .send({
+            title: 'Cats following Exploding Kittens Stars',
+            body: 'Instead of drinking water from the cat bowl, make sure to steal water from the toilet wake up human for food at 4am chase the pig around the house vommit food and eat it again meowzer or curl into a furry donut cat snacks. Have my breakfast spaghetti yarn soft kitty warm kitty little ball of furr small kitty warm kitty little balls of fur you call this cat food. I could pee on this if i had the energy push your water glass on the floor rub face on owner for pose purrfectly to show my beauty. Flop over stand in doorway, unwilling to chose whether to stay in or go out jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water. Curl into a furry donut lick the other cats or run in circles, so groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked or stand in doorway, unwilling to chose whether to stay in or go out but thug cat . Sleep everywhere, but not in my bed. Cat walks in keyboard twitch tail in permanent irritation yet scream for no reason at 4 am. Sleep in the bathroom sink chase laser. ',
+            topic: 'cats',
+            username: 'Batman',
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
+          }));
 
-        });
+        it('ERROR POST /ARTICLES BODY is empty', () => request.post('/api/articles')
+          .send({
+            title: 'Cats following Exploding Kittens Stars',
+            body: '  ',
+            topic: 'cats',
+            username: 'lepris',
+          })
+          .expect(400)
+          .then(({ body }) => {
+            // expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
+          }));
       });
     });
 
@@ -117,7 +169,7 @@ describe('', () => {
         })
         .expect(400)
         .then(({ body }) => {
-          expect(body.message).to.eql('Supplied POST data is incomplete, MISSING value of slug');
+          expect(body.message).to.eql('Supplied POST data is incomplete, please add:  slug');
         }));
       it('ERROR /BAD URL TOPICS 404 when passed wrong URL', () => request.post('/api/topics/abracadabra')
         .expect(404)
