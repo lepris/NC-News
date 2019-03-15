@@ -161,7 +161,7 @@ describe('', () => {
           }));
       });
 
-      describe.only('/GET /articles/:article_id/comments', () => {
+      describe('/GET /articles/:article_id/comments', () => {
         it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
           .expect(200)
           .then(({ body }) => {
