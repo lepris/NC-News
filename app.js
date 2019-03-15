@@ -12,6 +12,10 @@ app.use(bodyParser.json());
 
 app.use('/api', apiRouter);
 
+app.all((req, res, next) => {
+  res.status(405).send({ message: 'Method not allowed' });
+});
+
 app.all('/*', (req, res, next) => {
   res.status(404).send({ message: 'Route not found' });
 });

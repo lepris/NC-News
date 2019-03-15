@@ -9,4 +9,10 @@ console.log('*********', topicsRouter);
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/articles', articlesRouter);
 
+
+apiRouter.all((req, res, next) => {
+  res.status(405).send({ message: 'Method not allowed' });
+});
+
+
 module.exports = apiRouter;

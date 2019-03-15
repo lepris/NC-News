@@ -1,7 +1,7 @@
 const {
   getAllArticles, getArticleById, getCommentsByArticleId, getCurrentArticleCount, postArticle,
 } = require('../models/articlesModels');
-const { checkInput } = require('../db/utils/articlesChechInput');
+const { checkInput } = require('../db/utils/articlesCheckInput');
 
 exports.sendAllArticles = (req, res, next) => {
   const queryARgs = req.query;
@@ -13,10 +13,7 @@ exports.sendAllArticles = (req, res, next) => {
       return Promise.reject({ code: 404, message: 'Knex returned no results' });
     }
   })
-    .catch((err) => {
-      console.log('....moving to next');
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.sendArticleById = (req, res, next) => {
@@ -28,26 +25,16 @@ exports.sendArticleById = (req, res, next) => {
   getCurrentArticleCount()
     .then((currentCount) => {
       if (endParams.article_id > currentCount[0].count) {
-        console.log('rejecting...');
         return next({ code: 404, message: 'This id is not currently in our database' });
       }
     });
   getArticleById(endParams)
 
-    .then((returnedArticle) => {
-      const newArticle = returnedArticle[0];
-      newArticle.author = newArticle.username;
-      delete newArticle.username;
-
-      return newArticle;
-    })
     .then((article) => {
       console.log('//////>RESULT OF CONTROLLER\n\n\n', article);
       res.status(200).send({ article });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.sendCommentsByArticleId = (req, res, next) => {
@@ -73,9 +60,7 @@ exports.sendCommentsByArticleId = (req, res, next) => {
         return Promise.reject({ code: 204, message: 'No comment data for this article' });
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.addArticle = (req, res, next) => {
@@ -102,7 +87,5 @@ exports.addArticle = (req, res, next) => {
       console.log('/////////////CONTROLLER OUTPUT', addedArticle);
       res.status(201).send({ article: addedArticle });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };

@@ -33,19 +33,6 @@ DELETE /api/articles/:article_id
 ```http
 GET /api/articles/:article_id/comments
 ```
-
-##### Responds with
-- an array of comments for the given `article_id` of which each comment should have the following properties:
-  * `comment_id`
-  * `votes`
-  * `created_at`
-  * `author` which is the `username` from the users table
-  * `body`
-
-##### Accepts queries
-  * `sort_by`, which sorts the articles by any valid column (defaults to date)
-  * `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
-
 ##### If time  (the following will make pagination easier when you get to building your front-end application)
 - accept the following queries:
   * `limit`, which limits the number of responses (defaults to 10)
@@ -98,32 +85,6 @@ DELETE /api/comments/:comment_id
 
 ***
 
-```http
-GET /api/users
-```
-
-##### Responds with
-- an array of user objects, each of which should have the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-***
-
-```http
-POST /api/users
-```
-
-##### Request body accepts
-- an object containing the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-##### Responds with
-- the posted user
-
-***
 
 ```http
 GET /api/users/:username

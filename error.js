@@ -31,3 +31,12 @@ exports.handle404 = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.handle500 = (err, req, res, next) => {
+  const codes = {
+    500: `${err.message}`,
+
+  };
+  if (codes[err.code]) res.status(500).send({ message: codes[err.code] });
+  else { next(err); }
+};

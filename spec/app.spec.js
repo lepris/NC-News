@@ -17,9 +17,9 @@ describe('', () => {
 
   describe('/ROOT ERROR TESTING', () => {
     it('/TOPICS bad route', () => request.delete('/api/topics')
-      .expect(404)
+      .expect(405)
       .then(({ body }) => {
-        expect(body.message).to.eql('Route not found');
+        expect(body.message).to.eql('Method not allowed');
       }));
 
     it('/ROOT bad route', () => request.get('/bad_route')
@@ -146,8 +146,8 @@ describe('', () => {
       describe('GET api/articles/:article_id', () => {
         it('/GET /ARTICLES/:article_id responds with 200 and the correct article', () => request.get('/api/articles/1')
           .expect(200)
-          .then((res) => {
-            expect(res.body.article).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
+          .then(({ body }) => {
+            expect(body.article[0]).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
           }));
         it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
           .expect(400)
@@ -222,10 +222,29 @@ describe('', () => {
 
 
     describe('/users', () => {
-      it('/GET /USERS status 200 and router Hello response', () => request.get('/api/users')
+      it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
         .expect(200)
-        .then((res) => {
-          expect(res.body).to.eql({ greeting: 'Helo from USERS router' });
+        .then(({ body }) => {
+          expect(body[0]).to.have.all.keys('username', 'avatar_url', 'name');
+        }));
+      it('/POST /USERS status 201 and the posted users', () => request.post('/api/users')
+        .send({
+          username: 'HauHau',
+          avatar_url: 'https://photos.app.goo.gl/6m9i8keuBQpjWgre9',
+          name: 'Klaka',
+        })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.user).to.contain.keys('username', 'avatar_url', 'name');
+          expect(body.user.name).to.eql('Klaka');
+        }));
+      it('ERROR POST /BAD USER 400 when passed a malformed body', () => request.post('/api/users')
+        .send({
+          name: 'Klaka',
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.message).to.eql('Supplied POST data is incomplete, please add:  username');
         }));
     });
   });

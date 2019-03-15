@@ -10,7 +10,7 @@ articlesRouter
   .get(sendAllArticles)
   .post(addArticle)
   .all((req, res, next) => {
-    res.status(404).send({ message: 'Route not found' });
+    res.status(405).send({ message: 'Method not allowed' });
   });
 
 

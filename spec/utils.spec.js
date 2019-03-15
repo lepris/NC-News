@@ -1,7 +1,21 @@
 const { expect } = require('chai');
 const { convertDates, articleRef, commentRefined } = require('../db/utils/dateConversion.js');
+const { checkInput } = require('../db/utils/articlesCheckInput');
 
 // console.log(convertDate, articleRef);
+
+describe('Check if input body has correct keys', () => {
+  it('check if input is returned correctly', () => {
+    const inPut = {
+      title: 'rubbish',
+      body: 'this great body',
+      topic: 'dogs',
+      username: 'great me',
+    };
+
+    expect(checkInput(inPut)).to.have.all.keys('title', 'body', 'topic', 'author');
+  });
+});
 
 describe('Check utlitiry function for date conversion', () => {
   it('it takes the correct value', () => {

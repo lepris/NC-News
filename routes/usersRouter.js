@@ -1,9 +1,13 @@
 const usersRouter = require('express').Router();
-const { postUser } = require('../controllers/userControl');
+const { postUser, getUsers } = require('../controllers/userControl');
 
-usersRouter.get('/', (req, res, next) => {
-  res.status(200).send({ greeting: 'Helo from USERS router' });
-});
-usersRouter.post('/', postUser);
+usersRouter
+  .route('/')
+  .get(getUsers)
+  .post(postUser)
+
+  .all((req, res, next) => {
+    res.status(405).send({ message: 'Method not allowed' });
+  });
 
 module.exports = usersRouter;

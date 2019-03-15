@@ -9,36 +9,14 @@
 - Make sure all linting is passing
 
 
-## Seeding
-
-- At the end, you don't need the extra `Promise.all` or `then` blocks
-- `dateConversion` function shouldn't use `moment`, it should use JS' `new Date()` constructor. It is also mutating the original user objects `x.created_at = ...`. Avoid this where possible!
-- `articleRef` is using a `map` to mutate an object outside of the `map`!
-- `commentRefined` is also mutating the original data, could be named better.
-
-## app & Routes
-
-- Make your own `handle500` block
-- Extract your `.all` function away - This should be giving a 405 status code for "Method Not Allowed", rather than 404
-- Users router doesn't have completed `GET`
 
 ## Controllers
 
 - Be careful with naming. What it `queryARgs`?
-- `.catch(err => next(err))` can be changed to `.catch(next)`
-- Avoid this mutation where possible. Can use `AS` in SQL instead here (or better yet, rename the column in migrations). e.g.:
-
-```js
-console.log('\n\n', returnedArticle);
-const newArticle = returnedArticle[0];
-newArticle.author = returnedArticle[0].username;
-delete newArticle.username;
-return newArticle;
-```
 
 - `checkInput` function is a good idea but there are a some things that could be problematic:
   - `Object.keys()` cannot guarantee order
-  - `regex` is declared without `let` or `const`
+ 
   - typo in file name
 
 ## Models
