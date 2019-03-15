@@ -1,18 +1,16 @@
-const moment = require('moment');
-
-function dateConversion(userData) {
+function convertDates(userData) {
   // console.log('|--> UTILS/ DATE CONVERSION');
-  const newData = userData.map((x) => {
-    x.created_at = moment(x.created_at).format('YYYY-MM-DD');
-    return x;
+  const formattedData = userData.map((user) => {
+    const newUserData = { ...user };
+    newUserData.created_at = new Date(user.created_at);
+    return newUserData;
   });
-  return newData;
+  return formattedData;
 }
 
 function articleRef(data) {
-  // console.log('\n|--> UTILS/ articleRef , article id referencing');
   const result = {};
-  data.map(article => result[article.title] = article.article_id);
+  data.forEach(article => result[article.title] = article.article_id);
   return result;
 }
 
@@ -20,14 +18,15 @@ function commentRefined(refs, array) {
   // console.log('\n|--> UTILS/ commentRefined , comment article id ref');
 
   const newData = array.map((comment) => {
-    comment.article_id = refs[comment.belongs_to];
-    comment.author = comment.created_by;
-    delete comment.created_by;
-    delete comment.belongs_to;
-    return comment;
+    const newComment = { ...comment };
+    newComment.article_id = refs[comment.belongs_to];
+    newComment.author = comment.created_by;
+    delete newComment.created_by;
+    delete newComment.belongs_to;
+    return newComment;
   });
   return newData;
 }
 
 
-module.exports = { dateConversion, articleRef, commentRefined };
+module.exports = { convertDates, articleRef, commentRefined };

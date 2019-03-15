@@ -1,18 +1,18 @@
 const { expect } = require('chai');
-const { dateConversion, articleRef, commentRefined } = require('../db/utils/dateConversion.js');
+const { convertDates, articleRef, commentRefined } = require('../db/utils/dateConversion.js');
 
-// console.log(dateConversion, articleRef);
+// console.log(convertDate, articleRef);
 
 describe('Check utlitiry function for date conversion', () => {
   it('it takes the correct value', () => {
-    const result = dateConversion([{
+    const result = convertDates([{
       title: 'Eight pug gifs that remind me of mitch',
       topic: 'mitch',
       author: 'icellusedkars',
       body: 'some gifs',
       created_at: 1289996514171,
     }]);
-    expect(result[0].created_at).to.eql('2010-11-17');
+    expect(result[0].created_at.toString()).to.eql('Wed Nov 17 2010 12:21:54 GMT+0000 (GMT)');
   });
 });
 

@@ -182,7 +182,7 @@ describe('', () => {
         it('ERROR /GET /articles/:article_id/comments responds with 204 and NO comments for article', () => request.get('/api/articles/11/comments')
           .expect(204)
           .then(({ body }) => {
-            expect({}).to.eql({});
+            expect(body).to.eql({});
           }));
       });
     });
