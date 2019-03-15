@@ -1,5 +1,5 @@
 const {
-  getAllArticles, getArticleById, getCurrentArticleCount, postArticle,
+  getAllArticles, getArticleById, getCommentsByArticleId, getCurrentArticleCount, postArticle,
 } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesChechInput');
 
@@ -44,6 +44,34 @@ exports.sendArticleById = (req, res, next) => {
     .then((article) => {
       console.log('//////>RESULT OF CONTROLLER\n\n\n', article);
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.sendCommentsByArticleId = (req, res, next) => {
+  const queryArgs = req.query;
+  const endParams = req.params;
+  console.log('\n\n////////Hello from ARTicle/comments controller\n', queryArgs, '\n', endParams);
+  if (/[^0-9]/.test(endParams.article_id)) {
+    return next({ code: 400, message: 'Invalid input type, please provide a number' });
+  }
+  getCurrentArticleCount()
+    .then((currentCount) => {
+      if (endParams.article_id > currentCount[0].count) {
+        console.log('rejecting...');
+        return next({ code: 404, message: 'Article id is not currently in our database' });
+      }
+    });
+  getCommentsByArticleId([queryArgs, endParams])
+    .then((comments) => {
+      console.log('//////>RESULT OF CONTROLLER\n\n\n', comments);
+      if (comments[0]) {
+        res.status(200).send({ comments });
+      } else {
+        return Promise.reject({ code: 204, message: 'No comment data for this article' });
+      }
     })
     .catch((err) => {
       next(err);

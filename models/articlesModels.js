@@ -36,6 +36,24 @@ exports.getArticleById = data => connection.select('users.username', 'articles.t
   .where('articles.article_id', '=', data.article_id);
 
 
+exports.getCommentsByArticleId = ([args, data]) => {
+  console.log('\n\nCOMMENTS model data', data);
+  console.log('\n\nCOMMENTS model data', args);
+
+  if (args.order && args.order !== 'asc' && args.order !== 'desc') {
+    console.log('rejecting...');
+    return Promise.reject({ code: 404, message: 'Please input asc or desc' });
+  }
+
+  return connection.select('comment_id', 'votes', 'created_at', 'author', 'body')
+    .from('comments')
+    // .leftJoin('comments', { 'comments.article_id': 'articles.article_id' })
+    .leftJoin('users', { 'users.username': 'comments.author' })
+    // .groupBy('articles.article_id', 'users.username')
+    .where('comments.article_id', '=', data.article_id)
+    .orderBy(args.sort_by || 'comments.created_at', args.order || 'desc');
+};
+
 exports.postArticle = (data) => {
   console.log('\n///////MODEL OUTPUT', data);
   return connection.insert(data).into('articles').returning('*');

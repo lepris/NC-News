@@ -1,3 +1,12 @@
+exports.handle200 = (err, req, res, next) => {
+  console.log('\\\\\\\\\\\\\\HANDLE200', err.message);
+  if (err.code === 204) {
+    res.status(204).send({ message: err.message });
+  } else {
+    next(err);
+  }
+};
+
 exports.handle400 = (err, req, res, next) => {
   console.log('\\\\\HANDLE400', err);
   const codes = {

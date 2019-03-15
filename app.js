@@ -1,6 +1,8 @@
 const express = require('express');
 
-const { handle400, handle500, handle404 } = require('./error');
+const {
+  handle200, handle400, handle500, handle404,
+} = require('./error');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -15,6 +17,7 @@ app.all('/*', (req, res, next) => {
 });
 
 // other ERROR handling middleware
+app.use(handle200);
 app.use(handle400);
 app.use(handle404);
 

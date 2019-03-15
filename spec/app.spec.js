@@ -160,6 +160,31 @@ describe('', () => {
             expect(body.message).to.eql('This id is not currently in our database');
           }));
       });
+
+      describe.only('/GET /articles/:article_id/comments', () => {
+        it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments[0]).to.have.all.keys('comment_id', 'votes', 'created_at', 'author', 'body');
+          }));
+
+        it('/GET /articles/:article_id/comments?sort_by=comment_id responds with 200 and sorted comments for article', () => request.get('/api/articles/1/comments?sort_by=comment_id&&order=asc')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments[0].comment_id).to.be.lessThan(body.comments[1].comment_id);
+          }));
+
+        it('ERROR /GET /articles/:article_id/comments responds with 404 and the correct comments for article', () => request.get('/api/articles/9999999/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Article id is not currently in our database');
+          }));
+        it('ERROR /GET /articles/:article_id/comments responds with 204 and NO comments for article', () => request.get('/api/articles/11/comments')
+          .expect(204)
+          .then(({ body }) => {
+            expect({}).to.eql({});
+          }));
+      });
     });
 
 
