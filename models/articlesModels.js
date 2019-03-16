@@ -1,8 +1,10 @@
 const connection = require('../db/connection');
 
+exports.getAuthors = author => connection('articles').select('author').where('author', '=', author).returning('*');
+exports.getTopics = topic => connection('topics').select('slug').where('slug', '=', topic).returning('*');
+
 exports.getAllArticles = (args) => {
   if (args.order && args.order !== 'asc' && args.order !== 'desc') {
-    console.log('rejecting...');
     return Promise.reject({ code: 404, message: 'Please input asc or desc' });
   }
 

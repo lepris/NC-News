@@ -32,6 +32,11 @@ describe('', () => {
   describe('Router /api', () => {
     describe('Router /articles', () => {
       describe('/api/articles GET REQUEST', () => {
+        it('ERROR /DELETE /ARTICLES status 200 and return articles', () => request.delete('/api/articles')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.message).to.be.eql('Method not allowed');
+          }));
         it('/GET /ARTICLES status 200 and return articles', () => request.get('/api/articles')
           .expect(200)
           .then(({ body }) => {
@@ -42,21 +47,31 @@ describe('', () => {
           .then((res) => {
             expect(res.body.articles[0].author).to.be.eql('butter_bridge');
           }));
+
         it('ERROR /GET /ARTICLES QUERY WRONG author', () => request.get('/api/articles?author=Felix_Pauls_Cat')
-          .expect(404)
+          .expect(400)
           .then((res) => {
-            expect(res.body.message).to.eql('Sorry no articles found');
+            expect(res.body.message).to.eql('Sorry this author does not exist');
           }));
         it('/GET /ARTICLES QUERY topic', () => request.get('/api/articles?topic=cats')
           .expect(200)
           .then((res) => {
             expect(res.body.articles[0].topic).to.be.eql('cats');
           }));
-
+        it('/GET /ARTICLES QUERY TOPIC no articles', () => request.post('/api/topics')
+          .send({
+            description: 'just a silly topic',
+            slug: 'cotton',
+          })
+          .then(() => request.get('/api/articles?topic=cotton')
+            .expect(200)
+            .then(({ body }) => {
+              expect(body.message).to.eql('No articles for this topic yet');
+            })));
         it('ERROR /GET /ARTICLES QUERY WRONG topic', () => request.get('/api/articles?topic=cucumbers')
-          .expect(404)
+          .expect(400)
           .then((res) => {
-            expect(res.body.message).to.eql('Sorry no articles found');
+            expect(res.body.message).to.eql('Sorry this topic does not exist');
           }));
 
         it('/GET /ARTICLES QUERY SORT_BY taking valid column name', () => request.get('/api/articles?sort_by=votes')
@@ -141,7 +156,7 @@ describe('', () => {
           })
           .expect(400)
           .then(({ body }) => {
-            // expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
+            expect(body.message).to.eql('Currently your article is only characters 2, minimum accepted is 1000');
           }));
       });
       describe('GET api/articles/:article_id', () => {
@@ -206,7 +221,7 @@ describe('', () => {
             })));
       });
 
-      describe.only('/GET /articles/:article_id/comments', () => {
+      describe('/GET /articles/:article_id/comments', () => {
         it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
           .expect(200)
           .then(({ body }) => {
@@ -253,7 +268,6 @@ describe('', () => {
             })
             .expect(201)
             .then(({ body }) => {
-              console.log(body);
               const testRes = body.postedComment[0];
               expect(testRes).to.contain.keys('author', 'body');
               expect(testRes.author).to.eql('lepris');
@@ -315,7 +329,7 @@ describe('', () => {
         .then(({ body }) => {
           expect(body.topics[0]).to.have.keys('slug', 'description');
         }));
-      it('POST /TOPICS should reply with status 201 and the posted topic', () => request.post('/api/topics')
+      it('POST /TOPICS should reply with status 201 and 422 if added again', () => request.post('/api/topics')
         .send({
           slug: 'matters',
           description: 'Nothing really Matters',
@@ -324,7 +338,16 @@ describe('', () => {
         .then(({ body }) => {
           expect(body.topic).to.contain.keys('slug', 'description');
           expect(body.topic.slug).to.eql('matters');
-        }));
+        })
+        .then(() => request.post('/api/topics')
+          .send({
+            slug: 'matters',
+            description: 'Nothing really Matters',
+          })
+          .expect(422)
+          .then(({ body }) => {
+            expect(body.message).to.eql('This already exists : Key (slug)=(matters) already exists.');
+          })));
 
       it('ERROR POST /BAD TOPICS 400 when passed a malformed body', () => request.post('/api/topics')
         .send({
@@ -339,6 +362,11 @@ describe('', () => {
         .then(({ body }) => {
           expect(body.message).to.eql('Route not found');
         }));
+      it('ERROR /PUT /DELETE URL TOPICS 405  wrong Method', () => request.del('/api/topics/')
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.message).to.eql('Method not allowed');
+        }));
     });
 
 
@@ -347,7 +375,6 @@ describe('', () => {
         it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             expect(body.usersData[0]).to.have.all.keys('username', 'avatar_url', 'name');
           }));
         it('/POST /USERS status 201 and the posted users', () => request.post('/api/users')
@@ -382,7 +409,6 @@ describe('', () => {
         it('/GET /USERS:username status 200 and requested user with correct keys', () => request.get('/api/users/lepris')
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             const expectant = body.userData[0];
             expect(expectant).to.have.all.keys('username', 'avatar_url', 'name');
             expect(expectant.username).to.be.eql('lepris');
@@ -390,19 +416,16 @@ describe('', () => {
         it('ERROR /GET /USERS:username 404 user does not exist', () => request.get('/api/users/MrPresident')
           .expect(404)
           .then(({ body }) => {
-            console.log(body);
             expect(body.message).to.be.eql('User not found');
           }));
         it('ERROR /GET /USERS:username 404 user does not exist', () => request.post('/api/users/MrPresident')
           .expect(405)
           .then(({ body }) => {
-            console.log(body);
             expect(body.message).to.be.eql('Method not allowed');
           }));
         it('ERROR /GET /USERS:username 404 user does not exist', () => request.delete('/api/users/MrPresident')
           .expect(405)
           .then(({ body }) => {
-            console.log(body);
             expect(body.message).to.be.eql('Method not allowed');
           }));
       });

@@ -1,6 +1,5 @@
 exports.checkInput = (inputBody) => {
   const aOfKeys = Object.keys(inputBody).toString();
-  console.log(aOfKeys);
   if (aOfKeys.includes('title') && aOfKeys.includes('body') && aOfKeys.includes('topic') && aOfKeys.includes('body')) {
     const correctInput = {};
     correctInput.author = inputBody.username;

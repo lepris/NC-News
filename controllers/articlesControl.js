@@ -7,15 +7,34 @@ const {
   postComment,
   updateVotesByArticleId,
   deleteArticleById,
+  getAuthors,
+  getTopics,
 } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesCheckInput');
 
 exports.sendAllArticles = (req, res, next) => {
   const queryArgs = req.query;
+  if (queryArgs.author) {
+    getAuthors(queryArgs.author)
+      .then((author) => {
+        if (author.length === 0) {
+          return next({ code: 400, message: 'Sorry this author does not exist' });
+        }
+      });
+  }
+  if (queryArgs.topic) {
+    getTopics(queryArgs.topic)
+      .then((topic) => {
+        if (topic.length === 0) {
+          return next({ code: 400, message: 'Sorry this topic does not exist' });
+        }
+      });
+  }
+
   getAllArticles(queryArgs).then((articles) => {
     if (articles[0]) res.status(200).send({ articles });
     else {
-      return next({ code: 404, message: 'Sorry no articles found' });
+      res.status(200).send({ message: 'No articles for this topic yet' });
     }
   })
     .catch(next);

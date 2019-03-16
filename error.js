@@ -1,14 +1,10 @@
 exports.handle200 = (err, req, res, next) => {
-  console.log('\\\\\\\\\\\\\\HANDLE200', err.message);
-
   if (err.code === 204) {
     res.status(204).send({ message: err.message });
   } else { next(err); }
 };
 
-
 exports.handle400 = (err, req, res, next) => {
-  console.log('\\\\\HANDLE400', err);
   const codes = {
     400: `${err.message}`,
     badlang: `${err.message}`,
@@ -21,18 +17,17 @@ exports.handle400 = (err, req, res, next) => {
 };
 
 exports.handle422 = (err, req, res, next) => {
-  console.log('\n++++HANDLE422', err.code);
-
-  if (err.code === '23503') {
-    res.status(422).send({ message: `Please enter valid username ${err.detail}` });
+  const codes = {
+    23503: `Please enter valid username ${err.detail}`,
+    23505: `This already exists : ${err.detail}`,
+  };
+  if (codes[err.code]) {
+    res.status(422).send({ message: codes[err.code] });
   } else { next(err); }
 };
 
 exports.handle404 = (err, req, res, next) => {
-  console.log('\\\\\\\\\\\\\\HANDLE404', err.code);
-
   if (err.code === 404) {
-    console.log('it is getting here!');
     res.status(404).send({ message: err.message });
   } else { next(err); }
 };

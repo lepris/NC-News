@@ -17,50 +17,13 @@
 - Queries should be separated by one `&`, not two
 - It looks like you have built some things before you have tested them :(
 
+
+
+
 ## Our Tests
 
-### `POST /api/topics`
 
-status:422 client sends a body with a duplicate slug:
-Error: expected 422 "Unprocessable Entity", got 500 "Internal Server Error"
 
-### `POST /api/topics`
-
-POST status:400 if request body is malformed (missing description property):
-Error: expected 400 "Bad Request", got 201 "Created"
-
-Looks like you have decided that a description property is not absolutely necessary to create a topic. I'll leave this up to you :)
-
-### `/api/topics`
-
-status:405 invalid HTTP method for this resource:
-Error: expected 405 "Method Not Allowed", got 404 "Not Found"
-
-This route exists, but only has `GET` and `POST` methods on it, therefore a `405: Method Not Allowed` status would be more appropriate for things like `DELETE` or `PUT`
-
-### `/api/articles`
-
-status:405 invalid request method for end-point:
-Error: expected 405 "Method Not Allowed", got 404 "Not Found"
-
-### `GET /api/articles`
-
-responds with an empty array for articles queried with non-existent topic:
-Error: expected 200 "OK", got 404 "Not Found"
-
-If a topic exists, but contains no articles, `200` with a `{ articles: [] }` response would be best. This will make the difference clear when we come to building the front end.
-
-### `GET /api/articles`
-
-article objects have a comment_count property:
-AssertionError: expected '0' to equal '13'
-
-```
-- expected - actual
-
--0
-+13
-```
 
 ### `PATCH /api/articles/:article_id`
 
@@ -152,11 +115,3 @@ Error: expected 200 "OK", got 404 "Not Found"
 
 responds with 400 for an invalid article_id:
 Error: expected 400 "Bad Request", got 404 "Not Found"
-
-
-
-
-
-
-
-
