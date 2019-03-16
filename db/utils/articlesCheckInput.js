@@ -16,8 +16,6 @@ exports.checkInput = (inputBody) => {
     if (regex.test(inputBody.body)) {
       return ({ code: 'badlang', message: `Please no swearing, this is not allowed :  ${inputBody.body.match(/(\s)(marshmellow)((\s)|([,.]))|(\s)(broccoli)((\s)|([,.]))/gim)}` });
     }
-
-
     return correctInput;
   }
 

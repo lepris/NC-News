@@ -33,9 +33,6 @@ exports.getArticleById = data => connection.select('users.username as author', '
 
 
 exports.getCommentsByArticleId = ([args, data]) => {
-  console.log('\n\nCOMMENTS model data', data);
-  console.log('\n\nCOMMENTS model data', args);
-
   if (args.order && args.order !== 'asc' && args.order !== 'desc') {
     return Promise.reject({ code: 404, message: 'Please input asc or desc' });
   }

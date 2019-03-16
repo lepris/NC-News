@@ -63,18 +63,15 @@ exports.addArticle = (req, res, next) => {
   const newArticle = req.body;
   const validatedInput = checkInput(newArticle);
 
-
   if (!validatedInput) {
     return next({ code: 400, message: 'Please input data correctly: title body topic username' });
   }
   if (validatedInput.code === 'badlang') {
     return next({ code: 400, message: validatedInput.message });
   }
-
   if (validatedInput.code === 'bodyTooShort') {
     return next({ code: 400, message: validatedInput.message });
   }
-
 
   postArticle(validatedInput)
     .then(([addedArticle]) => {
