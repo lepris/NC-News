@@ -12,12 +12,10 @@
 
 ## Controllers
 
-- Be careful with naming. What it `queryARgs`?
 
-- `checkInput` function is a good idea but there are a some things that could be problematic:
-  - `Object.keys()` cannot guarantee order
+
+
  
-  - typo in file name
 
 ## Models
 
@@ -32,8 +30,7 @@
 
 - Utility functions seem to have only one test each?
 - Could organise `describe` blocks to give a nicer output to the terminal
-- `author=Felix_Pauls_Cat` hahaha
-- I wouldn't talk about knex to the clients: `"knex could not find..."`
+
 - Test the default `sort` and `order` before testing the valid queries
 - Queries should be separated by one `&`, not two
 - It looks like you have built some things before you have tested them :(
@@ -220,26 +217,6 @@ status:204 deletes the comment and responds with No Content:
 Error: expected 204 "No Content", got 404 "Not Found"
 
 ### `/api/comments/:comment_id
-
-invalid methods respond with 405:
-Error: expected 405 "Method Not Allowed", got 404 "Not Found"
-
-### `GET /api/users`
-
-responds with a 200 and an array of user objects:
-AssertionError: Target cannot be null or undefined.
-
-### `/api/users`
-
-invalid methods respond with 405:
-Error: expected 405 "Method Not Allowed", got 404 "Not Found"
-
-### `GET /api/users/:username`
-
-status:200 responds with a user object when given a valid username:
-Error: expected 200 "OK", got 404 "Not Found"
-
-### `/api/users/:username`
 
 invalid methods respond with 405:
 Error: expected 405 "Method Not Allowed", got 404 "Not Found"

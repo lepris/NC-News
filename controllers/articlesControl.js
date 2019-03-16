@@ -1,16 +1,20 @@
 const {
-  getAllArticles, getArticleById, getCommentsByArticleId, getCurrentArticleCount, postArticle,
+  getAllArticles,
+  getArticleById,
+  getCommentsByArticleId,
+  getCurrentArticleCount,
+  postArticle,
+  postComment,
 } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesCheckInput');
 
 exports.sendAllArticles = (req, res, next) => {
-  const queryARgs = req.query;
-  getAllArticles(queryARgs).then((articles) => {
-    console.log('\n\n/////////////////CONTROLLER ARTICLES RESULT\n\n', articles.slice(0, 2));
+  const queryArgs = req.query;
+  getAllArticles(queryArgs).then((articles) => {
     if (articles[0]) res.status(200).send({ articles });
     else {
       console.log('rejecting...');
-      return Promise.reject({ code: 404, message: 'Knex returned no results' });
+      return next({ code: 404, message: 'Sorry no articles found' });
     }
   })
     .catch(next);
@@ -57,7 +61,7 @@ exports.sendCommentsByArticleId = (req, res, next) => {
       if (comments[0]) {
         res.status(200).send({ comments });
       } else {
-        return Promise.reject({ code: 204, message: 'No comment data for this article' });
+        return next({ code: 204, message: 'No comment data for this article' });
       }
     })
     .catch(next);
@@ -86,6 +90,15 @@ exports.addArticle = (req, res, next) => {
     .then(([addedArticle]) => {
       console.log('/////////////CONTROLLER OUTPUT', addedArticle);
       res.status(201).send({ article: addedArticle });
+    })
+    .catch(next);
+};
+
+exports.addCommentsByArticleId = (req, res, next) => {
+  const newData = { ...req.body, ...req.params };
+  postComment(newData)
+    .then((postedComment) => {
+      res.status(201).send({ postedComment });
     })
     .catch(next);
 };

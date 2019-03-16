@@ -45,7 +45,7 @@ describe('', () => {
         it('ERROR /GET /ARTICLES QUERY WRONG author', () => request.get('/api/articles?author=Felix_Pauls_Cat')
           .expect(404)
           .then((res) => {
-            expect(res.body.message).to.eql('Knex returned no results');
+            expect(res.body.message).to.eql('Sorry no articles found');
           }));
         it('/GET /ARTICLES QUERY topic', () => request.get('/api/articles?topic=cats')
           .expect(200)
@@ -56,8 +56,9 @@ describe('', () => {
         it('ERROR /GET /ARTICLES QUERY WRONG topic', () => request.get('/api/articles?topic=cucumbers')
           .expect(404)
           .then((res) => {
-            expect(res.body.message).to.eql('Knex returned no results');
+            expect(res.body.message).to.eql('Sorry no articles found');
           }));
+
         it('/GET /ARTICLES QUERY SORT_BY taking valid column name', () => request.get('/api/articles?sort_by=votes')
           .expect(200)
           .then((res) => {
@@ -148,6 +149,7 @@ describe('', () => {
           .expect(200)
           .then(({ body }) => {
             expect(body.article[0]).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(body.article[0].comment_count).to.eql('13');
           }));
         it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
           .expect(400)
@@ -174,7 +176,7 @@ describe('', () => {
             expect(body.comments[0].comment_id).to.be.lessThan(body.comments[1].comment_id);
           }));
 
-        it('ERROR /GET /articles/:article_id/comments responds with 404 and the correct comments for article', () => request.get('/api/articles/9999999/comments')
+        it('ERROR /GET /articles/:article_id/comments responds with 404', () => request.get('/api/articles/9999999/comments')
           .expect(404)
           .then(({ body }) => {
             expect(body.message).to.eql('Article id is not currently in our database');
@@ -184,6 +186,29 @@ describe('', () => {
           .then(({ body }) => {
             expect(body).to.eql({});
           }));
+
+        describe('/POST /articles/:article_id/comments', () => {
+          it('/POST /articles/:article_id/comments status 201 and the posted comment', () => request.post('/api/articles/2/comments')
+            .send({
+              author: 'lepris',
+              body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
+            })
+            .expect(201)
+            .then(({ body }) => {
+              const testRes = body.postedComment[0];
+              expect(testRes).to.contain.keys('author', 'body');
+              expect(testRes.author).to.eql('lepris');
+              expect(testRes.body).to.eql('Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family');
+            }));
+          it('ERROR POST /bad article /articles/:article_id/comments 400 when passed a malformed body', () => request.post('/api/articles/2/comments')
+            .send({
+              author: 'lepris',
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.message).to.eql('Supplied POST data is incomplete, please add:  body');
+            }));
+        });
       });
     });
 
@@ -222,30 +247,76 @@ describe('', () => {
 
 
     describe('/users', () => {
-      it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
-        .expect(200)
-        .then(({ body }) => {
-          expect(body[0]).to.have.all.keys('username', 'avatar_url', 'name');
-        }));
-      it('/POST /USERS status 201 and the posted users', () => request.post('/api/users')
-        .send({
-          username: 'HauHau',
-          avatar_url: 'https://photos.app.goo.gl/6m9i8keuBQpjWgre9',
-          name: 'Klaka',
-        })
-        .expect(201)
-        .then(({ body }) => {
-          expect(body.user).to.contain.keys('username', 'avatar_url', 'name');
-          expect(body.user.name).to.eql('Klaka');
-        }));
-      it('ERROR POST /BAD USER 400 when passed a malformed body', () => request.post('/api/users')
-        .send({
-          name: 'Klaka',
-        })
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.message).to.eql('Supplied POST data is incomplete, please add:  username');
-        }));
+      describe('/USERS /GET /POST', () => {
+        it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.usersData[0]).to.have.all.keys('username', 'avatar_url', 'name');
+          }));
+        it('/POST /USERS status 201 and the posted users', () => request.post('/api/users')
+          .send({
+            username: 'HauHau',
+            avatar_url: 'https://photos.app.goo.gl/6m9i8keuBQpjWgre9',
+            name: 'Klaka',
+          })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body.user).to.contain.keys('username', 'avatar_url', 'name');
+            expect(body.user.name).to.eql('Klaka');
+          }));
+        it('ERROR POST /BAD USER 400 when passed a malformed body', () => request.post('/api/users')
+          .send({
+            name: 'Klaka',
+          })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Supplied POST data is incomplete, please add:  username');
+          }));
+        it('ERROR METHOD NOT ALLOWED 405 when PATCH', () => request.patch('/api/users')
+          .send({
+            name: 'Klakakakaka',
+          })
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Method not allowed');
+          }));
+      });
+      describe('/USERS/:username', () => {
+        it('/GET /USERS:username status 200 and requested user with correct keys', () => request.get('/api/users/lepris')
+          .expect(200)
+          .then(({ body }) => {
+            console.log(body);
+            const expectant = body.userData[0];
+            expect(expectant).to.have.all.keys('username', 'avatar_url', 'name');
+            expect(expectant.username).to.be.eql('lepris');
+          }));
+        it('ERROR /GET /USERS:username 404 user does not exist', () => request.get('/api/users/MrPresident')
+          .expect(404)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.message).to.be.eql('User not found');
+          }));
+        it('ERROR /GET /USERS:username 404 user does not exist', () => request.post('/api/users/MrPresident')
+          .expect(405)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.message).to.be.eql('Method not allowed');
+          }));
+        it('ERROR /GET /USERS:username 404 user does not exist', () => request.delete('/api/users/MrPresident')
+          .expect(405)
+          .then(({ body }) => {
+            console.log(body);
+            expect(body.message).to.be.eql('Method not allowed');
+          }));
+      });
+    });
+
+    describe('/comments', () => {
+      describe('/', () => {
+
+      });
+
     });
   });
 });

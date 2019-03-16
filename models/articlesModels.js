@@ -58,6 +58,9 @@ exports.postArticle = (data) => {
   console.log('\n///////MODEL OUTPUT', data);
   return connection.insert(data).into('articles').returning('*');
 };
+
+exports.postComment = data => connection.insert(data).into('comments').returning('*');
+
 exports.getCurrentArticleCount = () => {
   console.log('\n\n\n CURRENT COUNT');
   return connection.count('article_id').from('articles');
