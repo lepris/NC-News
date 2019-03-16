@@ -59,30 +59,6 @@ PATCH /api/comments/:comment_id
 
 ***
 
-```http
-DELETE /api/comments/:comment_id
-```
-
-##### Should
-- delete the given comment by `comment_id`
-
-##### Responds with
-- status 204 and no content
-
-***
-
-
-```http
-GET /api/users/:username
-```
-
-##### Responds with
-- a user object which should have the following properties:
-  * `username`
-  * `avatar_url`
-  * `name`
-
-***
 
 ```http
 GET /api

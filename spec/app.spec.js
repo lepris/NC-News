@@ -29,8 +29,8 @@ describe('', () => {
       }));
   });
 
-  describe('/api', () => {
-    describe('/articles', () => {
+  describe('Router /api', () => {
+    describe('Router /articles', () => {
       describe('/api/articles GET REQUEST', () => {
         it('/GET /ARTICLES status 200 and return articles', () => request.get('/api/articles')
           .expect(200)
@@ -213,7 +213,7 @@ describe('', () => {
     });
 
 
-    describe('/topics ', () => {
+    describe('Router /topics ', () => {
       it('GET /TOPICS should reply with status 200 and array of all topics', () => request.get('/api/topics')
         .expect(200)
         .then(({ body }) => {
@@ -246,7 +246,7 @@ describe('', () => {
     });
 
 
-    describe('/users', () => {
+    describe('Router /users', () => {
       describe('/USERS /GET /POST', () => {
         it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
           .expect(200)
@@ -312,11 +312,45 @@ describe('', () => {
       });
     });
 
-    describe('/comments', () => {
-      describe('/', () => {
-
+    describe.only('Router /comments', () => {
+      describe('commentsRouter Error 405 METHOD NOT ALLOWED', () => {
+        it('api/comments /GET not allowed', () => request.get('/api/comments/')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.message).to.be.eql('Method not allowed');
+          }));
+        it('api/comments /POST not allowed', () => request.post('/api/comments/')
+          .expect(405)
+          .then(({ body }) => {
+            expect(body.message).to.be.eql('Method not allowed');
+          }));
       });
-
+      describe('/comments/:comment_Id', () => {
+        describe('commentsRouter endpoint :comment_Id Error 405 METHOD NOT ALLOWED', () => {
+          it('api/comments/:comment_Id /GET not allowed', () => request.get('/api/comments/1')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.message).to.be.eql('Method not allowed');
+            }));
+          it('api/comments/:comment_Id /POST not allowed', () => request.post('/api/comments/2')
+            .expect(405)
+            .then(({ body }) => {
+              expect(body.message).to.be.eql('Method not allowed');
+            }));
+        });
+        describe('/DELETE comment', () => {
+          it('/DELETE api/comments/:comment_Id 204 success No Content', () => request.delete('/api/comments/1')
+            .expect(204)
+            .then(({ body }) => {
+              expect(body).to.be.eql({});
+            })
+            .then(() => request.delete('/api/comments/1')
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.message).to.be.eql('Comment with id 1 does not exist');
+              })));
+        });
+      });
     });
   });
 });
