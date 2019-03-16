@@ -154,7 +154,7 @@ describe('', () => {
         it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
           .expect(400)
           .then(({ body }) => {
-            expect(body.message).to.eql('Invalid input type, please provide a number');
+            expect(body.message).to.eql('Invalid article id');
           }));
         it('/GET /ARTICLES/999999 responds with 404 ', () => request.get('/api/articles/999999')
           .expect(404)
@@ -162,6 +162,38 @@ describe('', () => {
             expect(body.message).to.eql('This id is not currently in our database');
           }));
       });
+      describe('/PATCH api/articles/:article_id', () => {
+        it('/PATCH api/articles/:article_id { inc_votes: 1 } 200  success retuns votes +1', () => request.patch('/api/articles/1')
+          .send({ inc_votes: 1 })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0].votes).to.be.eql(101);
+          }));
+        it('/PATCH api/articles/:article_id { inc_votes: -1 } 200  success retuns votes -1', () => request.patch('/api/articles/1')
+          .send({ inc_votes: -1 })
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0].votes).to.be.eql(99);
+          }));
+        it('/PATCH api/articles/:article_id 200 {} success retuns votes unchanged', () => request.patch('/api/articles/1')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body[0].votes).to.be.eql(100);
+          }));
+        it('/PATCH api/articles/:article_id { inc_votes: test } 400  success retuns votes -1', () => request.patch('/api/articles/1')
+          .send({ inc_votes: 'test' })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.be.eql('Please provide a number');
+          }));
+        it('ERROR /PATCH api/articles/:article_id BAD ID { inc_votes: -1 } 400 Bad request', () => request.patch('/api/articles/gg')
+          .send({ inc_votes: -1 })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.be.eql('Invalid article id');
+          }));
+      });
+
 
       describe('/GET /articles/:article_id/comments', () => {
         it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
@@ -361,27 +393,23 @@ describe('', () => {
             .send({ inc_votes: -1 })
             .expect(200)
             .then(({ body }) => {
-
               expect(body[0].votes).to.be.eql(15);
             }));
           it('/PATCH api/comments/:comment_Id 200 {} success retuns votes unchanged', () => request.patch('/api/comments/1')
             .expect(200)
             .then(({ body }) => {
-
               expect(body[0].votes).to.be.eql(16);
             }));
           it('/PATCH api/comments/:comment_Id { inc_votes: test } 400  success retuns votes -1', () => request.patch('/api/comments/1')
             .send({ inc_votes: 'test' })
             .expect(400)
             .then(({ body }) => {
-
               expect(body.message).to.be.eql('Please provide a number');
             }));
           it('ERROR /PATCH api/comments/:comment_Id BAD ID { inc_votes: -1 } 400 Bad request', () => request.patch('/api/comments/gg')
             .send({ inc_votes: -1 })
             .expect(400)
             .then(({ body }) => {
-
               expect(body.message).to.be.eql('Invalid comment id');
             }));
         });
