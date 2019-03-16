@@ -1,8 +1,6 @@
 const connection = require('../db/connection');
 
 exports.getAllArticles = (args) => {
-
-
   if (args.order && args.order !== 'asc' && args.order !== 'desc') {
     console.log('rejecting...');
     return Promise.reject({ code: 404, message: 'Please input asc or desc' });
@@ -39,7 +37,6 @@ exports.getCommentsByArticleId = ([args, data]) => {
   console.log('\n\nCOMMENTS model data', args);
 
   if (args.order && args.order !== 'asc' && args.order !== 'desc') {
-
     return Promise.reject({ code: 404, message: 'Please input asc or desc' });
   }
 
@@ -50,15 +47,12 @@ exports.getCommentsByArticleId = ([args, data]) => {
     .orderBy(args.sort_by || 'comments.created_at', args.order || 'desc');
 };
 
-exports.postArticle = (data) => {
-  return connection.insert(data).into('articles').returning('*');
-};
+exports.postArticle = data => connection.insert(data).into('articles').returning('*');
 
 exports.postComment = data => connection.insert(data).into('comments').returning('*');
 
-exports.getCurrentArticleCount = () => {
-
-  return connection.count('article_id').from('articles');
-};
+exports.getCurrentArticleCount = () => connection.count('article_id').from('articles');
 
 exports.updateVotesByArticleId = ({ article_id, inc_votes }) => connection('articles').where('article_id', '=', article_id).increment('votes', inc_votes || 0).returning('*');
+
+exports.deleteArticleById = article_id => connection.from('articles').where('article_id', '=', article_id).del().returning('*');

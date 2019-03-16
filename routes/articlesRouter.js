@@ -6,6 +6,7 @@ const {
   sendCommentsByArticleId,
   addCommentsByArticleId,
   patchArticleVotes,
+  deleteArticleById,
 } = require('../controllers/articlesControl');
 
 articlesRouter
@@ -19,6 +20,7 @@ articlesRouter
   .route('/:article_id')
   .get(sendArticleById)
   .patch(patchArticleVotes)
+  .delete(deleteArticleById)
   .all((req, res, next) => {
     res.status(405).send({ message: 'Method not allowed' });
   });

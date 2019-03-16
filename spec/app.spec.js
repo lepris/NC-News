@@ -193,7 +193,18 @@ describe('', () => {
             expect(body.message).to.be.eql('Invalid article id');
           }));
       });
-
+      describe('/DELETE api/articles/:article_id', () => {
+        it('/DELETE api/articles/:article_id 204 success No Content', () => request.delete('/api/articles/1')
+          .expect(204)
+          .then(({ body }) => {
+            expect(body).to.be.eql({});
+          })
+          .then(() => request.delete('/api/articles/1')
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.message).to.be.eql('Article with id 1 does not exist');
+            })));
+      });
 
       describe('/GET /articles/:article_id/comments', () => {
         it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
@@ -212,6 +223,11 @@ describe('', () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.message).to.eql('Article id is not currently in our database');
+          }));
+        it('ERROR /GET /articles/:article_id/comments responds with 404', () => request.get('/api/articles/mobyDick/comments')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.message).to.eql('Invalid article id');
           }));
         it('ERROR /GET /articles/:article_id/comments responds with 204 and NO comments for article', () => request.get('/api/articles/11/comments')
           .expect(204)

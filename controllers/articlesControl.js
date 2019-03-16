@@ -6,6 +6,7 @@ const {
   postArticle,
   postComment,
   updateVotesByArticleId,
+  deleteArticleById,
 } = require('../models/articlesModels');
 const { checkInput } = require('../db/utils/articlesCheckInput');
 
@@ -14,7 +15,6 @@ exports.sendAllArticles = (req, res, next) => {
   getAllArticles(queryArgs).then((articles) => {
     if (articles[0]) res.status(200).send({ articles });
     else {
-
       return next({ code: 404, message: 'Sorry no articles found' });
     }
   })
@@ -42,9 +42,6 @@ exports.sendCommentsByArticleId = (req, res, next) => {
   const queryArgs = req.query;
   const endParams = req.params;
 
-  if (/[^0-9]/.test(endParams.article_id)) {
-    return next({ code: 400, message: 'Invalid input type, please provide a number' });
-  }
   getCurrentArticleCount()
     .then((currentCount) => {
       if (endParams.article_id > currentCount[0].count) {
@@ -63,8 +60,6 @@ exports.sendCommentsByArticleId = (req, res, next) => {
 };
 
 exports.addArticle = (req, res, next) => {
-
-
   const newArticle = req.body;
   const validatedInput = checkInput(newArticle);
 
@@ -108,5 +103,17 @@ exports.patchArticleVotes = (req, res, next) => {
   updateVotesByArticleId(votesData)
     .then((updatedVotes) => {
       res.status(200).send(updatedVotes);
+    });
+};
+
+exports.deleteArticleById = (req, res, next) => {
+  const articleId = req.params.article_id;
+  deleteArticleById(articleId)
+    .then((deletedArticle) => {
+      if (deletedArticle[0]) {
+        res.status(204).send('No content');
+      } else {
+        return next({ code: 404, message: `Article with id ${articleId} does not exist` });
+      }
     });
 };
