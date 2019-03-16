@@ -191,32 +191,9 @@ Error: expected 400 "Bad Request", got 404 "Not Found"
 responds with a 422 when given a non-existent username:
 Error: expected 422 "Unprocessable Entity", got 404 "Not Found"
 
-### `PATCH /api/comments/:comment_id`
 
-status:200 and an updated comment when given a body including a valid "inc_votes" (VOTE DOWN):
-Error: expected 200 "OK", got 404 "Not Found"
 
-### `PATCH /api/comments/:comment_id
 
-status:200 with no body responds with an unmodified comment:
-Error: expected 200 "OK", got 404 "Not Found"
 
-### `PATCH /api/comments/:comment_id`
 
-status:400 if given an invalid inc_votes:
-Error: expected 400 "Bad Request", got 404 "Not Found"
 
-### `PATCH /api/comments/:comment_id`
-
-status:400 if invalid comment_id is used:
-Error: expected 400 "Bad Request", got 404 "Not Found"
-
-### `DELETE /api/comments/:comment_id`
-
-status:204 deletes the comment and responds with No Content:
-Error: expected 204 "No Content", got 404 "Not Found"
-
-### `/api/comments/:comment_id
-
-invalid methods respond with 405:
-Error: expected 405 "Method Not Allowed", got 404 "Not Found"

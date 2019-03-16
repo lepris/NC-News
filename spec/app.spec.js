@@ -312,7 +312,7 @@ describe('', () => {
       });
     });
 
-    describe.only('Router /comments', () => {
+    describe('Router /comments', () => {
       describe('commentsRouter Error 405 METHOD NOT ALLOWED', () => {
         it('api/comments /GET not allowed', () => request.get('/api/comments/')
           .expect(405)
@@ -349,6 +349,41 @@ describe('', () => {
               .then(({ body }) => {
                 expect(body.message).to.be.eql('Comment with id 1 does not exist');
               })));
+        });
+        describe('/PATCH comment updating VOTES', () => {
+          it('/PATCH api/comments/:comment_Id { inc_votes: 1 } 200  success retuns votes +1', () => request.patch('/api/comments/1')
+            .send({ inc_votes: 1 })
+            .expect(200)
+            .then(({ body }) => {
+              expect(body[0].votes).to.be.eql(17);
+            }));
+          it('/PATCH api/comments/:comment_Id { inc_votes: -1 } 200  success retuns votes -1', () => request.patch('/api/comments/1')
+            .send({ inc_votes: -1 })
+            .expect(200)
+            .then(({ body }) => {
+
+              expect(body[0].votes).to.be.eql(15);
+            }));
+          it('/PATCH api/comments/:comment_Id 200 {} success retuns votes unchanged', () => request.patch('/api/comments/1')
+            .expect(200)
+            .then(({ body }) => {
+
+              expect(body[0].votes).to.be.eql(16);
+            }));
+          it('/PATCH api/comments/:comment_Id { inc_votes: test } 400  success retuns votes -1', () => request.patch('/api/comments/1')
+            .send({ inc_votes: 'test' })
+            .expect(400)
+            .then(({ body }) => {
+
+              expect(body.message).to.be.eql('Please provide a number');
+            }));
+          it('ERROR /PATCH api/comments/:comment_Id BAD ID { inc_votes: -1 } 400 Bad request', () => request.patch('/api/comments/gg')
+            .send({ inc_votes: -1 })
+            .expect(400)
+            .then(({ body }) => {
+
+              expect(body.message).to.be.eql('Invalid comment id');
+            }));
         });
       });
     });
