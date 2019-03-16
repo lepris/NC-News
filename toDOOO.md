@@ -5,16 +5,10 @@ GET /api/articles/:article_id/comments
 ```
 ##### If time  (the following will make pagination easier when you get to building your front-end application)
 - accept the following queries:
-  * `limit`, which limits the number of responses (defaults to 10)
+  
   * `p`, stands for page which specifies the page at which to start (calculated using limit)
 
 ***
-
-##### Responds with
-- the updated comment
-
-***
-
 
 ```http
 GET /api

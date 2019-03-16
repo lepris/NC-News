@@ -206,17 +206,27 @@ describe('', () => {
             })));
       });
 
-      describe('/GET /articles/:article_id/comments', () => {
+      describe.only('/GET /articles/:article_id/comments', () => {
         it('/GET /articles/:article_id/comments responds with 200 and the correct comments for article', () => request.get('/api/articles/1/comments')
           .expect(200)
           .then(({ body }) => {
             expect(body.comments[0]).to.have.all.keys('comment_id', 'votes', 'created_at', 'author', 'body');
           }));
 
-        it('/GET /articles/:article_id/comments?sort_by=comment_id responds with 200 and sorted comments for article', () => request.get('/api/articles/1/comments?sort_by=comment_id&&order=asc')
+        it('/GET /articles/:article_id/comments?sort_by=comment_id responds with 200 and sorted comments for article', () => request.get('/api/articles/1/comments?sort_by=comment_id&order=asc')
           .expect(200)
           .then(({ body }) => {
             expect(body.comments[0].comment_id).to.be.lessThan(body.comments[1].comment_id);
+          }));
+        it('/GET /articles/:article_id/comments?sort_by=comment_id DEFAULT LIMIT of 10 status 200 and sorted comments for article', () => request.get('/api/articles/1/comments?sort_by=comment_id&order=asc')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.be.eql(10);
+          }));
+        it('/GET /articles/:article_id/comments?sort_by=comment_id SET LIMIT of 5 status 200 and sorted comments for article', () => request.get('/api/articles/1/comments?sort_by=comment_id&order=asc&limit=5')
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.comments.length).to.be.eql(5);
           }));
 
         it('ERROR /GET /articles/:article_id/comments responds with 404', () => request.get('/api/articles/9999999/comments')

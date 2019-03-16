@@ -41,7 +41,8 @@ exports.getCommentsByArticleId = ([args, data]) => {
     .from('comments')
     .leftJoin('users', { 'users.username': 'comments.author' })
     .where('comments.article_id', '=', data.article_id)
-    .orderBy(args.sort_by || 'comments.created_at', args.order || 'desc');
+    .orderBy(args.sort_by || 'comments.created_at', args.order || 'desc')
+    .limit(args.limit || 10);
 };
 
 exports.postArticle = data => connection.insert(data).into('articles').returning('*');

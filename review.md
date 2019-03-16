@@ -8,24 +8,6 @@
 - Remove any comments & `console.log`s
 - Make sure all linting is passing
 
-
-
-## Controllers
-
-
-
-
- 
-
-## Models
-
-- Destructure args where possible
-- Avoid `delete`. Use `AS` or rename columns. Should only need one `then` block.
-
-## Error Handling
-
-- Need to use more error handling blocks
-
 ## Testing
 
 - Utility functions seem to have only one test each?
