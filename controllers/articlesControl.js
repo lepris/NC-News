@@ -85,6 +85,9 @@ exports.addArticle = (req, res, next) => {
 
 exports.addCommentsByArticleId = (req, res, next) => {
   const newData = { ...req.body, ...req.params };
+  if (Object.keys(req.body).length > 2) {
+    return next({ code: 400, message: 'New comment can only take values author and comment body' });
+  }
   postComment(newData)
     .then((postedComment) => {
       res.status(201).send({ postedComment });

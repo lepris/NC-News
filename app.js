@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {
-  handle200, handle400, handle500, handle404,
+  handle200, handle400, handle500, handle404, handle422,
 } = require('./error');
 
 const app = express();
@@ -24,6 +24,7 @@ app.all('/*', (req, res, next) => {
 app.use(handle200);
 app.use(handle400);
 app.use(handle404);
+app.use(handle422);
 
 
 module.exports = app;

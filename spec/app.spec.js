@@ -109,7 +109,7 @@ describe('', () => {
           .then(({ body }) => {
             expect(body.message).to.eql('Please input data correctly: title body topic username');
           }));
-        it('ERROR POST /ArTICLES should reply with status 400 and BAD lnaguage', () => request.post('/api/articles')
+        it('ERROR POST /ARTICLES should reply with status 400 and BAD lnaguage', () => request.post('/api/articles')
           .send({
             title: 'Cats following Exploding Kittens Stars',
             body: 'Instead of drinking water from the cat bowl, make broccoli sure to steal water from the toilet wake up human for food at 4am chase the pig around the house vommit food and eat it again meowzer or curl into a furry donut cat snacks. Have my breakfast spaghetti yarn soft kitty warm kitty little ball of furr small kitty warm kitty little balls of fur you call this cat food. I could pee on this if i had the energy push your water glass on the floor rub face on owner for pose purrfectly to show my beauty. Flop over stand in doorway, unwilling to chose whether to stay in or go out jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water. Curl into a furry donut lick the other cats or run in circles, so groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked or stand in doorway, unwilling to chose whether to stay in or go out but thug cat . Sleep everywhere, but not in my bed. Cat walks in keyboard twitch tail in permanent irritation yet scream for no reason at 4 am. Sleep in the bathroom sink chase laser. ',
@@ -127,9 +127,9 @@ describe('', () => {
             topic: 'cats',
             username: 'Batman',
           })
-          .expect(400)
+          .expect(422)
           .then(({ body }) => {
-            expect(body.message).to.eql('Key (author)=(Batman) is not present in table "users".');
+            expect(body.message).to.eql('Please enter valid username Key (author)=(Batman) is not present in table "users".');
           }));
 
         it('ERROR POST /ARTICLES BODY is empty', () => request.post('/api/articles')
@@ -243,18 +243,56 @@ describe('', () => {
             })
             .expect(201)
             .then(({ body }) => {
+              console.log(body);
               const testRes = body.postedComment[0];
               expect(testRes).to.contain.keys('author', 'body');
               expect(testRes.author).to.eql('lepris');
               expect(testRes.body).to.eql('Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family');
             }));
-          it('ERROR POST /bad article /articles/:article_id/comments 400 when passed a malformed body', () => request.post('/api/articles/2/comments')
+          it('ERROR POST /body missing /articles/:article_id/comments 400I*NCORRECT string for exixstent article id', () => request.post('/api/articles/kk/comments')
+            .send({
+              author: 'lepris',
+              body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.message).to.eql('Invalid article id');
+            }));
+          it('ERROR POST /body missing /articles/:article_id/comments 400 NON exixstent article id', () => request.post('/api/articles/99999999/comments')
+            .send({
+              author: 'lepris',
+              body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
+            })
+            .expect(422)
+            .then(({ body }) => {
+              expect(body.message).to.eql('Please enter valid username Key (article_id)=(99999999) is not present in table "articles".');
+            }));
+          it('ERROR POST /body missing /articles/:article_id/comments 400 when passed a malformed body', () => request.post('/api/articles/2/comments')
             .send({
               author: 'lepris',
             })
             .expect(400)
             .then(({ body }) => {
               expect(body.message).to.eql('Supplied POST data is incomplete, please add:  body');
+            }));
+          it('ERROR POST /body missing /articles/:article_id/comments 400 when bad column entered', () => request.post('/api/articles/2/comments')
+            .send({
+              author: 'lepris',
+              country: 'Paraguay',
+              body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
+            })
+            .expect(400)
+            .then(({ body }) => {
+              expect(body.message).to.eql('New comment can only take values author and comment body');
+            }));
+          it('ERROR POST /body missing /articles/:article_id/comments 400 when bad column entered', () => request.post('/api/articles/2/comments')
+            .send({
+              author: 'Jerry the Postman',
+              body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
+            })
+            .expect(422)
+            .then(({ body }) => {
+              expect(body.message).to.eql('Please enter valid username Key (author)=(Jerry the Postman) is not present in table "users".');
             }));
         });
       });

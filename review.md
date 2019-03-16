@@ -171,25 +171,6 @@ Error: expected 200 "OK", got 404 "Not Found"
 responds with 400 for an invalid article_id:
 Error: expected 400 "Bad Request", got 404 "Not Found"
 
-### `POST /api/articles/:article_id/comments`
-
-responds with a 201 and the posted comment when given a valid article_id:
-Error: expected 201 "Created", got 404 "Not Found"
-
-### `POST /api/articles/:article_id/comments`
-
-responds with a 400 when given an invalid article id:
-Error: expected 400 "Bad Request", got 404 "Not Found"
-
-### `POST /api/articles/:article_id/comments`
-
-responds with a 400 when given an invalid body referencing a non-existent column:
-Error: expected 400 "Bad Request", got 404 "Not Found"
-
-### `POST /api/articles/:article_id/comments`
-
-responds with a 422 when given a non-existent username:
-Error: expected 422 "Unprocessable Entity", got 404 "Not Found"
 
 
 
