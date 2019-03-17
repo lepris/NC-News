@@ -1,3 +1,9 @@
+/**
+ * This function adds one to its input.
+ * @param {number} input any number
+ * @returns {number} that number, plus one.
+ */
+
 exports.handle200 = (err, req, res, next) => {
   if (err.code === 204) {
     res.status(204).send({ message: err.message });
