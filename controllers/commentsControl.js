@@ -10,7 +10,11 @@ exports.patchCommentVotes = (req, res, next) => {
   }
   updateVotesByCommentId(votesData)
     .then((updatedVotes) => {
-      res.status(200).send(updatedVotes);
+      if (updatedVotes[0]) {
+        res.status(200).send(...updatedVotes);
+      } else {
+        return next({ code: 404, message: 'Not Found' });
+      }
     });
 };
 

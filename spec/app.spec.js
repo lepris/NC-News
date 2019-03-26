@@ -55,8 +55,8 @@ describe('', () => {
           }));
         it('/GET /ARTICLES QUERY topic', () => request.get('/api/articles?topic=cats')
           .expect(200)
-          .then((res) => {
-            expect(res.body.articles[0].topic).to.be.eql('cats');
+          .then(({ body }) => {
+            expect(body.articles[0].topic).to.be.eql('cats');
           }));
         it('/GET /ARTICLES QUERY TOPIC no articles', () => request.post('/api/topics')
           .send({
@@ -82,7 +82,7 @@ describe('', () => {
         it('ERROR /GET /ARTICLES QUERY SORT_BY taking valid column name', () => request.get('/api/articles?sort_by=chewbaca')
           .expect(400)
           .then((res) => {
-            expect(res.body.message).to.eql('Column does not exist, please change sort criteria');
+            expect(res.body.message).to.eql('Bad Request');
           }));
         it('/GET /ARTICLES QUERY ORDER set to ascending', () => request.get('/api/articles?sort_by=votes&&order=asc')
           .expect(200)
@@ -163,18 +163,18 @@ describe('', () => {
         it('/GET /ARTICLES/:article_id responds with 200 and the correct article', () => request.get('/api/articles/1')
           .expect(200)
           .then(({ body }) => {
-            expect(body.article[0]).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
-            expect(body.article[0].comment_count).to.eql('13');
+            expect(body).to.contain.keys('author', 'title', 'article_id', 'body', 'topic', 'created_at', 'votes', 'comment_count');
+            expect(body.comment_count).to.eql('13');
           }));
         it('/GET /ARTICLES/bad_type responds with 400 ', () => request.get('/api/articles/bad_type')
           .expect(400)
           .then(({ body }) => {
             expect(body.message).to.eql('Invalid article id');
           }));
-        it('/GET /ARTICLES/999999 responds with 404 ', () => request.get('/api/articles/999999')
+        it('/GET /ARTICLES/11112 responds with 404 ', () => request.get('/api/articles/11112')
           .expect(404)
           .then(({ body }) => {
-            expect(body.message).to.eql('This id is not currently in our database');
+            expect(body.message).to.eql('Not Found');
           }));
       });
       describe('/PATCH api/articles/:article_id', () => {
@@ -182,18 +182,18 @@ describe('', () => {
           .send({ inc_votes: 1 })
           .expect(200)
           .then(({ body }) => {
-            expect(body[0].votes).to.be.eql(101);
+            expect(body.votes).to.be.eql(101);
           }));
         it('/PATCH api/articles/:article_id { inc_votes: -1 } 200  success retuns votes -1', () => request.patch('/api/articles/1')
           .send({ inc_votes: -1 })
           .expect(200)
           .then(({ body }) => {
-            expect(body[0].votes).to.be.eql(99);
+            expect(body.votes).to.be.eql(99);
           }));
         it('/PATCH api/articles/:article_id 200 {} success retuns votes unchanged', () => request.patch('/api/articles/1')
           .expect(200)
           .then(({ body }) => {
-            expect(body[0].votes).to.be.eql(100);
+            expect(body.votes).to.be.eql(100);
           }));
         it('/PATCH api/articles/:article_id { inc_votes: test } 400  success retuns votes -1', () => request.patch('/api/articles/1')
           .send({ inc_votes: 'test' })
@@ -209,15 +209,15 @@ describe('', () => {
           }));
       });
       describe('/DELETE api/articles/:article_id', () => {
-        it('/DELETE api/articles/:article_id 204 success No Content', () => request.delete('/api/articles/1')
+        it('/DELETE api/articles/:article_id 204 success No Content', () => request.delete('/api/articles/4')
           .expect(204)
           .then(({ body }) => {
             expect(body).to.be.eql({});
           })
-          .then(() => request.delete('/api/articles/1')
+          .then(() => request.delete('/api/articles/4')
             .expect(404)
             .then(({ body }) => {
-              expect(body.message).to.be.eql('Article with id 1 does not exist');
+              expect(body.message).to.be.eql('Article with id 4 does not exist');
             })));
       });
 
@@ -244,20 +244,20 @@ describe('', () => {
             expect(body.comments.length).to.be.eql(5);
           }));
 
-        it('ERROR /GET /articles/:article_id/comments responds with 404', () => request.get('/api/articles/9999999/comments')
+        it('ERROR /GET /articles/999999999/comments responds with 404', () => request.get('/api/articles/9999999/comments')
           .expect(404)
           .then(({ body }) => {
             expect(body.message).to.eql('Article id is not currently in our database');
           }));
-        it('ERROR /GET /articles/:article_id/comments responds with 404', () => request.get('/api/articles/mobyDick/comments')
+        it('ERROR /GET /articles/mobyDick/comments responds with 404', () => request.get('/api/articles/mobyDick/comments')
           .expect(400)
           .then(({ body }) => {
             expect(body.message).to.eql('Invalid article id');
           }));
         it('ERROR /GET /articles/:article_id/comments responds with 204 and NO comments for article', () => request.get('/api/articles/11/comments')
-          .expect(204)
+          .expect(404)
           .then(({ body }) => {
-            expect(body).to.eql({});
+            expect(body.message).to.eql('Not Found');
           }));
 
         describe('/POST /articles/:article_id/comments', () => {
@@ -268,10 +268,9 @@ describe('', () => {
             })
             .expect(201)
             .then(({ body }) => {
-              const testRes = body.postedComment[0];
-              expect(testRes).to.contain.keys('author', 'body');
-              expect(testRes.author).to.eql('lepris');
-              expect(testRes.body).to.eql('Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family');
+              expect(body).to.contain.keys('author', 'body');
+              expect(body.author).to.eql('lepris');
+              expect(body.body).to.eql('Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family');
             }));
           it('ERROR POST /body missing /articles/:article_id/comments 400I*NCORRECT string for exixstent article id', () => request.post('/api/articles/kk/comments')
             .send({
@@ -282,14 +281,14 @@ describe('', () => {
             .then(({ body }) => {
               expect(body.message).to.eql('Invalid article id');
             }));
-          it('ERROR POST /body missing /articles/:article_id/comments 400 NON exixstent article id', () => request.post('/api/articles/99999999/comments')
+          it('ERROR POST bad article ID /articles/9999999999/comments 400 NON exixstent article id', () => request.post('/api/articles/99999999/comments')
             .send({
               author: 'lepris',
               body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
             })
-            .expect(422)
+            .expect(404)
             .then(({ body }) => {
-              expect(body.message).to.eql('Please enter valid username Key (article_id)=(99999999) is not present in table "articles".');
+              expect(body.message).to.eql('Not Found');
             }));
           it('ERROR POST /body missing /articles/:article_id/comments 400 when passed a malformed body', () => request.post('/api/articles/2/comments')
             .send({
@@ -299,7 +298,7 @@ describe('', () => {
             .then(({ body }) => {
               expect(body.message).to.eql('Supplied POST data is incomplete, please add:  body');
             }));
-          it('ERROR POST /body missing /articles/:article_id/comments 400 when bad column entered', () => request.post('/api/articles/2/comments')
+          it('ERROR POST extra column /articles/:article_id/comments 400 when bad column entered', () => request.post('/api/articles/2/comments')
             .send({
               author: 'lepris',
               country: 'Paraguay',
@@ -307,9 +306,9 @@ describe('', () => {
             })
             .expect(400)
             .then(({ body }) => {
-              expect(body.message).to.eql('New comment can only take values author and comment body');
+              expect(body.message).to.eql('Bad Request');
             }));
-          it('ERROR POST /body missing /articles/:article_id/comments 400 when bad column entered', () => request.post('/api/articles/2/comments')
+          it('ERROR POST non-existen username /articles/:article_id/comments 422 when bad column entered', () => request.post('/api/articles/2/comments')
             .send({
               author: 'Jerry the Postman',
               body: 'Pizza with a hole is just an oversized wagon wheel, this wil ot feed a family',
@@ -375,7 +374,7 @@ describe('', () => {
         it('/GET /USERS status 200 and list of users', () => request.get('/api/users')
           .expect(200)
           .then(({ body }) => {
-            expect(body.usersData[0]).to.have.all.keys('username', 'avatar_url', 'name');
+            expect(body[0]).to.have.all.keys('username', 'avatar_url', 'name');
           }));
         it('/POST /USERS status 201 and the posted users', () => request.post('/api/users')
           .send({
@@ -408,8 +407,8 @@ describe('', () => {
       describe('/USERS/:username', () => {
         it('/GET /USERS:username status 200 and requested user with correct keys', () => request.get('/api/users/lepris')
           .expect(200)
-          .then(({ body }) => {
-            const expectant = body.userData[0];
+          .then(({ body: { userData } }) => {
+            const expectant = userData;
             expect(expectant).to.have.all.keys('username', 'avatar_url', 'name');
             expect(expectant.username).to.be.eql('lepris');
           }));
@@ -474,18 +473,19 @@ describe('', () => {
             .send({ inc_votes: 1 })
             .expect(200)
             .then(({ body }) => {
-              expect(body[0].votes).to.be.eql(17);
+              expect(body.votes).to.be.eql(17);
             }));
           it('/PATCH api/comments/:comment_Id { inc_votes: -1 } 200  success retuns votes -1', () => request.patch('/api/comments/1')
             .send({ inc_votes: -1 })
             .expect(200)
             .then(({ body }) => {
-              expect(body[0].votes).to.be.eql(15);
+              expect(body.votes).to.be.eql(15);
             }));
           it('/PATCH api/comments/:comment_Id 200 {} success retuns votes unchanged', () => request.patch('/api/comments/1')
+            .send({})
             .expect(200)
             .then(({ body }) => {
-              expect(body[0].votes).to.be.eql(16);
+              expect(body.votes).to.be.eql(16);
             }));
           it('/PATCH api/comments/:comment_Id { inc_votes: test } 400  success retuns votes -1', () => request.patch('/api/comments/1')
             .send({ inc_votes: 'test' })
@@ -498,6 +498,12 @@ describe('', () => {
             .expect(400)
             .then(({ body }) => {
               expect(body.message).to.be.eql('Invalid comment id');
+            }));
+          it('ERROR /PATCH api/comments/:comment_Id 6666666 { inc_votes: -1 } 400 Bad request', () => request.patch('/api/comments/6666666')
+            .send({ inc_votes: -1 })
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.message).to.be.eql('Not Found');
             }));
         });
       });

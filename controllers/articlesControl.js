@@ -41,38 +41,42 @@ exports.sendAllArticles = (req, res, next) => {
 };
 
 exports.sendArticleById = (req, res, next) => {
-  const endParams = req.params;
+  const { article_id } = req.params;
 
   getCurrentArticleCount()
     .then((currentCount) => {
-      if (endParams.article_id > currentCount[0].count) {
+      if (article_id > currentCount[0].count) {
         return next({ code: 404, message: 'This id is not currently in our database' });
       }
     });
-  getArticleById(endParams)
+  getArticleById(article_id)
 
     .then((article) => {
-      res.status(200).send({ article });
+      if (article[0]) {
+        res.status(200).send(...article);
+      } else {
+        return next({ code: 404, message: 'Not Found' });
+      }
     })
     .catch(next);
 };
 
 exports.sendCommentsByArticleId = (req, res, next) => {
-  const queryArgs = req.query;
-  const endParams = req.params;
+  const { order, sort_by, limit } = req.query;
+  const { article_id } = req.params;
 
   getCurrentArticleCount()
     .then((currentCount) => {
-      if (endParams.article_id > currentCount[0].count) {
+      if (article_id > currentCount[0].count) {
         return next({ code: 404, message: 'Article id is not currently in our database' });
       }
     });
-  getCommentsByArticleId([queryArgs, endParams])
+  getCommentsByArticleId(order, sort_by, limit, article_id)
     .then((comments) => {
       if (comments[0]) {
         res.status(200).send({ comments });
       } else {
-        return next({ code: 204, message: 'No comment data for this article' });
+        return next({ code: 404, message: 'Not Found' });
       }
     })
     .catch(next);
@@ -101,12 +105,16 @@ exports.addArticle = (req, res, next) => {
 
 exports.addCommentsByArticleId = (req, res, next) => {
   const newData = { ...req.body, ...req.params };
-  if (Object.keys(req.body).length > 2) {
-    return next({ code: 400, message: 'New comment can only take values author and comment body' });
-  }
+  const { article_id } = req.params;
+  getArticleById(article_id)
+    .then((article) => {
+      if (!article[0]) {
+        return next({ code: 404, message: 'Not Found' });
+      }
+    });
   postComment(newData)
     .then((postedComment) => {
-      res.status(201).send({ postedComment });
+      res.status(201).send(...postedComment);
     })
     .catch(next);
 };
@@ -121,18 +129,26 @@ exports.patchArticleVotes = (req, res, next) => {
   }
   updateVotesByArticleId(votesData)
     .then((updatedVotes) => {
-      res.status(200).send(updatedVotes);
-    });
+      res.status(200).send(...updatedVotes);
+    })
+    .catch(next);
 };
 
+
 exports.deleteArticleById = (req, res, next) => {
-  const articleId = req.params.article_id;
-  deleteArticleById(articleId)
-    .then((deletedArticle) => {
-      if (deletedArticle[0]) {
+  const { article_id } = req.params;
+  getArticleById(article_id)
+    .then((article) => {
+      if (!article[0]) {
+        return next({ code: 404, message: 'Not Found' });
+      }
+    });
+  deleteArticleById(article_id)
+    .then((deleted) => {
+      if (deleted[0]) {
         res.status(204).send('No content');
       } else {
-        return next({ code: 404, message: `Article with id ${articleId} does not exist` });
+        return next({ code: 404, message: `Article with id ${article_id} does not exist` });
       }
     });
 };

@@ -12,17 +12,17 @@ exports.postUser = (req, res, next) => {
 exports.getUsers = (req, res, next) => {
   sendUsers()
     .then((usersData) => {
-      res.status(200).send({ usersData });
+      res.status(200).send(usersData);
     })
     .catch(next);
 };
 
 exports.getUserByUsername = (req, res, next) => {
-  const username = req.params.username;
+  const { username } = req.params;
   sendUserByUsername(username)
     .then((userData) => {
       if (userData[0]) {
-        res.status(200).send({ userData });
+        res.status(200).send({ userData: { ...userData[0] } });
       } else {
         return next({ code: 404, message: 'User not found' });
       }
