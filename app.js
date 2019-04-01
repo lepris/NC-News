@@ -7,7 +7,9 @@ const {
 const app = express();
 const bodyParser = require('body-parser');
 const apiRouter = require('./routes/apiRouter');
+const { PORT = 9090 } = process.env;
 
+app.listen(PORT, () => console.log(`listening on ${PORT}`));
 app.use(bodyParser.json());
 
 app.use('/api', apiRouter);
