@@ -7,7 +7,7 @@ const commentsRouter = require('./commentsRouter');
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/articles', articlesRouter);
-apiRouter.use('/comments/', commentsRouter);
+apiRouter.use('/comments', commentsRouter);
 
 apiRouter.all((req, res, next) => {
   res.status(405).send({ message: 'Method not allowed' });
