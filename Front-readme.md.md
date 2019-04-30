@@ -102,10 +102,11 @@
 </tr>
 </tbody>
 </table><h3 id="built-with">Built With</h3>
-<p>This project is a simple, RESTful Node.js based api which allows to read, create and delete articles and comments. Express acts as HTTP server communicating with PostgreSQL database.</p>
+<p>Frontend React app which allows to view, create and delete articles and comments.<br>
+Uses ReachRouter .</p>
 <ul>
-<li><a href="https://expressjs.com/">Express</a></li>
-<li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+<li><a href="https://github.com/lepris/NC-News">https://github.com/lepris/NC-News</a></li>
+<li><a href="https://reactjs.org/">https://reactjs.org/</a></li>
 </ul>
 <!-- GETTING STARTED -->
 <h2 id="getting-started">Getting Started</h2>
