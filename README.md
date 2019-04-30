@@ -1,6 +1,6 @@
 <!-- PROJECT SHIELDS -->
 <!-- Header -->
-<h1 id="nc-news">NC NEWS</h1>
+<h1 id="nc-news-api">NC NEWS API</h1>
 <p>Project for my own application backend API, used together with ReactJS frontend project <a href="https://github.com/lepris/NC-News-front">https://github.com/lepris/NC-News-front</a></p>
 <h3 id="live-demo">Live Demo</h3>
 <p><a href="https://leprisnews.netlify.com/">https://leprisnews.netlify.com/</a></p>
@@ -25,7 +25,7 @@
 </ul>
 <!-- ABOUT THE PROJECT -->
 <h2 id="about-the-project">About The Project</h2>
-<h4 id="nc-news-api">NC News API</h4>
+<h4 id="nc-news-api-1">NC News API</h4>
 <p>Makes students life merrier, by enabling to post articles touching various topics, is plain, simple and to the point:</p>
 <p>Great functionalities:</p>
 <ul>
