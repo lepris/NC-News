@@ -1,8 +1,4 @@
 <!-- PROJECT SHIELDS -->
-<p><a href="">![Build Status][build-shield]</a><br>
-<a href="">![Contributors][contributors-shield]</a><br>
-[![MIT License][license-shield]][license-url]<br>
-[![LinkedIn][linkedin-shield]][linkedin-url]</p>
 <!-- Header -->
 <h1 id="nc-news">NC NEWS</h1>
 <p>Project for my own application backend API, used together with ReactJS frontend project <a href="https://github.com/lepris/NC-News-front">https://github.com/lepris/NC-News-front</a></p>
