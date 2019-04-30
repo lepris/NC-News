@@ -1,173 +1,149 @@
 <!-- PROJECT SHIELDS -->
-<p><a href="">![Build Status][build-shield]</a><br>
-<a href="">![Contributors][contributors-shield]</a><br>
-[![MIT License][license-shield]][license-url]<br>
-[![LinkedIn][linkedin-shield]][linkedin-url]</p>
-<!-- Header -->
-<h1 id="nc-news">NC NEWS</h1>
-<!-- TABLE OF CONTENTS -->
-<h2 id="table-of-contents">Table of Contents</h2>
-<ul>
-<li><a href="#about-the-project">About the Project</a>
-<ul>
-<li><a href="#built-with">Built With</a></li>
-</ul>
-</li>
-<li><a href="#getting-started">Getting Started</a>
-<ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#installation">Installation</a></li>
-</ul>
-</li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#contributing">Contributing</a></li>
-<li><a href="#license">License</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
-<!-- ABOUT THE PROJECT -->
-<h2 id="about-the-project">About The Project</h2>
-<h4 id="nc-news-api">NC News API</h4>
-<p>Makes students life merrier, by enabling to post articles touching various topics, is plain, simple and to the point:</p>
-<p>Great functionalities:</p>
-<ul>
-<li>Defining topics</li>
-<li>Creating articles</li>
-<li>Commenting</li>
-<li>Voting</li>
-<li>Adding Users</li>
-</ul>
-<h4 id="documentation">Documentation</h4>
-<p>Full interactive  API documentation available:</p>
-<p><a href="https://apincnews.docs.apiary.io/">https://apincnews.docs.apiary.io</a></p>
-<h4 id="default-permissions">Default permissions</h4>
+[![Build Status][build-shield]]()
+[![Contributors][contributors-shield]]()
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-<table>
-<thead>
-<tr>
-<th>User roles</th>
-<th>Guest</th>
-<th>Authenticated User</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>View Articles</td>
-<td><strong>OK</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Add Articles</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Delete Articles</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Vote on Articles</td>
-<td><strong>OK</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>View Topics</td>
-<td><strong>OK</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Add Topics</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Delete Topics</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>View Comments</td>
-<td><strong>OK</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Add Comments</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Delete Comments</td>
-<td><strong>X</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-<tr>
-<td>Vote on Comments</td>
-<td><strong>OK</strong></td>
-<td><strong>OK</strong></td>
-</tr>
-</tbody>
-</table><h3 id="built-with">Built With</h3>
-<p>This project is a simple, RESTful Node.js based api which allows to read, create and delete articles and comments. Express acts as HTTP server communicating with PostgreSQL database.</p>
-<ul>
-<li><a href="https://expressjs.com/">Express</a></li>
-<li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
-</ul>
+
+
+<!-- Header -->
+# NC NEWS
+
+
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [About the Project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+
+#### NC News API 
+
+Makes students life merrier, by enabling to post articles touching various topics, is plain, simple and to the point:
+
+Great functionalities:
+* Defining topics
+* Creating articles
+* Commenting
+* Voting
+* Adding Users
+
+#### Documentation
+Full interactive  API documentation available:
+
+[https://apincnews.docs.apiary.io](https://apincnews.docs.apiary.io/)
+
+#### Default permissions
+
+| User roles | Guest | Authenticated User
+|--|--|--|
+| View Articles | **OK** | **OK**
+| Add Articles | **X** | **OK**
+| Delete Articles | **X** | **OK**
+| Vote on Articles | **OK** | **OK**
+| View Topics | **OK** | **OK**
+| Add Topics | **X** | **OK**
+| Delete Topics | **X** | **OK**
+| View Comments | **OK** | **OK**
+| Add Comments | **X** | **OK**
+| Delete Comments | **X** | **OK**
+| Vote on Comments | **OK** | **OK**
+
+
+
+### Built With
+
+This project is a simple, RESTful Node.js based api which allows to read, create and delete articles and comments. Express acts as HTTP server communicating with PostgreSQL database.
+
+* [Express](https://expressjs.com/)
+* [PostgreSQL](https://www.postgresql.org/)
+
 <!-- GETTING STARTED -->
-<h2 id="getting-started">Getting Started</h2>
-<p>To run the project locally</p>
-<h3 id="prerequisites">Prerequisites</h3>
-<p>In order to run this project PostgreSQL must be running either on the host or in Docker container.</p>
-<ul>
-<li>npm</li>
-</ul>
-<pre class=" language-sh"><code class="prism  language-sh">npm install npm@latest -g
-</code></pre>
-<p><strong>or</strong></p>
-<ul>
-<li>yarn</li>
-</ul>
-<p>Follow <strong>Yarn</strong> installation instructions<br>
-<a href="https://yarnpkg.com/en/docs/install">https://yarnpkg.com/en/docs/install</a></p>
-<h3 id="installation">Installation</h3>
-<ol>
-<li>Clone the repo</li>
-</ol>
-<pre class=" language-sh"><code class="prism  language-sh">git clone git@github.com:lepris/NC-News.git
-</code></pre>
-<ol start="2">
-<li>Install dependencies</li>
-</ol>
-<pre class=" language-sh"><code class="prism  language-sh">npm install
-</code></pre>
-<p><strong>or</strong></p>
-<ul>
-<li>yarn</li>
-</ul>
-<pre class=" language-sh"><code class="prism  language-sh">yarn
-</code></pre>
-<p>For app deployment follow your specific service provider instructions.</p>
+## Getting Started
+
+To run the project locally
+
+### Prerequisites
+
+In order to run this project PostgreSQL must be running either on the host or in Docker container.
+
+* npm
+```sh
+npm install npm@latest -g
+```
+**or**
+* yarn
+
+Follow **Yarn** installation instructions
+[https://yarnpkg.com/en/docs/install](https://yarnpkg.com/en/docs/install)
+
+
+### Installation
+
+1. Clone the repo
+```sh
+git clone git@github.com:lepris/NC-News.git
+```
+2. Install dependencies
+```sh
+npm install
+```
+**or**
+* yarn
+```sh
+yarn
+```
+
+For app deployment follow your specific service provider instructions.
+
 <!-- USAGE EXAMPLES -->
-<h2 id="usage">Usage</h2>
-<p>API Documentation can be found on <strong>APIARY</strong><br>
-<a href="https://apincnews.docs.apiary.io/">https://apincnews.docs.apiary.io</a></p>
+## Usage
+
+API Documentation can be found on **APIARY**
+[https://apincnews.docs.apiary.io](https://apincnews.docs.apiary.io/)
+
+
 <!-- CONTRIBUTING -->
-<h2 id="contributing">Contributing</h2>
-<p>Any contributions are  <strong>extremely welcome</strong>.</p>
-<ol>
-<li>Fork the Project</li>
-<li>Create your Feature Branch (<code>git checkout -b feature/AmazingFeature</code>)</li>
-<li>Commit your Changes (<code>git commit -m 'Add some AmazingFeature</code>)</li>
-<li>Push to the Branch (<code>git push origin feature/AmazingFeature</code>)</li>
-<li>Open a Pull Request</li>
-</ol>
+## Contributing
+
+Any contributions are  **extremely welcome**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+
 <!-- LICENSE -->
-<h2 id="license">License</h2>
-<p>Distributed under the MIT License. See <a href="./license.txt">LICENSE</a> for more information.</p>
+## License
+
+Distributed under the MIT License. See [LICENSE](./license.txt) for more information.
+
+
+
 <!-- CONTACT -->
-<h2 id="contact">Contact</h2>
-<p>Project Link: <a href="https://github.com/lepris/NC-News">https://github.com/lepris/NC-News</a></p>
+## Contact
+
+
+Project Link: [https://github.com/lepris/NC-News](https://github.com/lepris/NC-News)
+
 <!--ACKNOWLEDGEMENTS-->
-<h3 id="acknowledgements">Acknowledgements</h3>
-<p><strong>STACKEDIT</strong>  <a href="https://stackedit.io/">https://stackedit.io</a><br>
-<strong>APIARY</strong>  <a href="https://apiary.io/">https://apiary.io</a></p>
+### Acknowledgements
+**STACKEDIT**  [https://stackedit.io](https://stackedit.io/)
+**APIARY**  [https://apiary.io](https://apiary.io/)
 
