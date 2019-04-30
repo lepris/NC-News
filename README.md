@@ -164,11 +164,11 @@
 <p>Distributed under the MIT License. See <a href="./license.txt">LICENSE</a> for more information.</p>
 <!-- CONTACT -->
 <h2 id="contact">Contact</h2>
+<p>LinkedIn:<br>
+<a href="www.linkedin.com/in/lepris">www.linkedin.com/in/lepris</a></p>
 <p>Project Link: <a href="https://github.com/lepris/NC-News">https://github.com/lepris/NC-News</a></p>
 <!--ACKNOWLEDGEMENTS-->
 <h3 id="acknowledgements">Acknowledgements</h3>
 <p><strong>STACKEDIT</strong>  <a href="https://stackedit.io/">https://stackedit.io</a><br>
 <strong>APIARY</strong>  <a href="https://apiary.io/">https://apiary.io</a></p>
-<!--LINKS-->
-<p><a href="www.linkedin.com/in/lepris">linkedin-url</a></p>
 
