@@ -3,7 +3,7 @@
 <!-- Header -->
 <h1 id="nc-news-api">NC NEWS API</h1>
 <p><img src="https://img.shields.io/github/license/lepris/NC-News.svg" alt="enter image description here"></p>
-<p>Project for my own application backend API, used together with ReactJS frontend project <a href="https://github.com/lepris/NC-News-front">https://github.com/lepris/NC-News-front</a></p>
+<p>Project for my own application backend API, used together with React frontend project <a href="https://github.com/lepris/NC-News-front">https://github.com/lepris/NC-News-front</a></p>
 <h3 id="live-demo">Live Demo</h3>
 <p><a href="https://leprisnews.netlify.com/">https://leprisnews.netlify.com/</a><br>
 <img src="https://img.shields.io/website/https/leprisnews.netlify.com.svg?down_message=offline&amp;up_message=online" alt="status"></p>
